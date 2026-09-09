@@ -23,25 +23,29 @@ const container = document.getElementById("card-container");
 const progressText = document.getElementById("progress-indicator");
 
 let currentIndex = 0;
-let careerData = null;
+let careerContentCache = null;
+let contentLoadPromise = null;
 
-// Pre-fetch career content on load
-async function initContent() {
-  try {
-    const res = await fetch("data/career-content.json");
-    careerData = await res.json();
-  } catch (err) {
-    console.error("Could not load career-content.json", err);
-  }
+// Background preload: non-blocking at startup, guarded at result screen
+function preloadCareerContent() {
+  contentLoadPromise = fetch("data/career-content.json")
+    .then(res => res.json())
+    .then(data => {
+      careerContentCache = data?.pathways || {};
+    })
+    .catch(err => {
+      console.error("Failed to load career content", err);
+      careerContentCache = {}; // empty object fallback, never null
+    });
 }
 
 // Card sequence definition
 const CARD_SEQUENCE = [
-  { field: "math_comfort", render: renderMathCard },
+  { field: "math_comfort", render: renderMathCard, optional: false },
   { field: "board", render: renderBoardCard, optional: true },
-  { field: "top_interests", render: renderInterestsCard },
-  { field: "geo_budget_tier", render: renderGeoBudgetCard },
-  { field: "path_signal", render: renderPathSignalCard }
+  { field: "top_interests", render: renderInterestsCard, optional: false },
+  { field: "geo_budget_tier", render: renderGeoBudgetCard, optional: false },
+  { field: "path_signal", render: renderPathSignalCard, optional: false }
 ];
 
 function updateProgress() {
@@ -52,222 +56,336 @@ function updateProgress() {
   }
 }
 
-function nextStep() {
-  currentIndex++;
-  if (currentIndex < CARD_SEQUENCE.length) {
-    updateProgress();
-    CARD_SEQUENCE[currentIndex].render();
-  } else {
-    updateProgress();
+// Idempotent card renderer (destroys and rebuilds DOM cleanly)
+function renderCard(index) {
+  currentIndex = index;
+  updateProgress();
+  container.innerHTML = "";
+
+  if (currentIndex >= CARD_SEQUENCE.length) {
     renderResultCard();
+    return;
   }
+
+  const cardDef = CARD_SEQUENCE[currentIndex];
+  const snapshot = getSessionSnapshot();
+  const currentValue = snapshot[cardDef.field];
+
+  cardDef.render(currentValue);
+}
+
+// Shared Navigation Row Helper
+function appendNavRow(cardElement, onNext, isNextEnabled = true) {
+  const nav = document.createElement("div");
+  nav.className = "nav-row";
+
+  // Back Button
+  if (currentIndex > 0) {
+    const backBtn = document.createElement("button");
+    backBtn.className = "btn-secondary";
+    backBtn.textContent = "← Back";
+    backBtn.addEventListener("click", () => renderCard(currentIndex - 1));
+    nav.appendChild(backBtn);
+  } else {
+    nav.appendChild(document.createElement("div")); // Spacer
+  }
+
+  // Next Button
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "btn-primary";
+  nextBtn.id = "card-next-btn";
+  nextBtn.textContent = currentIndex === CARD_SEQUENCE.length - 1 ? "View Roadmap →" : "Next →";
+  nextBtn.disabled = !isNextEnabled;
+  nextBtn.addEventListener("click", onNext);
+  nav.appendChild(nextBtn);
+
+  cardElement.appendChild(nav);
 }
 
 // 1. Math Comfort Card
-function renderMathCard() {
-  container.innerHTML = `
-    <div class="card">
-      <h2>How comfortable are you with Mathematics?</h2>
-      <p class="hint">Mathematics forms the foundation for algorithms and technical AI tracks.</p>
-      <div class="options-grid">
-        <button class="btn-option" data-val="${MATH_COMFORT.STRONG}">Strong (Enjoy calculus, algebra & problem-solving)</button>
-        <button class="btn-option" data-val="${MATH_COMFORT.AVERAGE}">Average (Can handle it with consistent practice)</button>
-        <button class="btn-option" data-val="${MATH_COMFORT.WEAK}">Weak (Prefer minimal formulas and pure math)</button>
-        <button class="btn-option" data-val="${MATH_COMFORT.UNTESTED}">Untested / Not Sure</button>
-      </div>
-    </div>
+function renderMathCard(currentValue) {
+  const card = document.createElement("div");
+  card.className = "intake-card";
+  card.innerHTML = `
+    <h2>How comfortable are you with Mathematics?</h2>
+    <p class="hint">Mathematics forms the foundation for algorithms and technical AI tracks.</p>
+    <div class="option-group" id="math-options"></div>
   `;
 
-  container.querySelectorAll(".btn-option").forEach(btn => {
+  const options = [
+    { val: MATH_COMFORT.STRONG, label: "Strong (Enjoy algebra, geometry & problem-solving)" },
+    { val: MATH_COMFORT.AVERAGE, label: "Average (Can handle it with consistent practice)" },
+    { val: MATH_COMFORT.WEAK, label: "Weak (Prefer minimal formulas and pure math)" },
+    { val: MATH_COMFORT.UNTESTED, label: "Untested / Not Sure" }
+  ];
+
+  const group = card.querySelector("#math-options");
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = `btn-option ${currentValue === opt.val ? "selected" : ""}`;
+    btn.textContent = opt.label;
     btn.addEventListener("click", () => {
-      setMathComfort(btn.dataset.val);
-      nextStep();
+      setMathComfort(opt.val);
+      renderCard(currentIndex + 1);
     });
+    group.appendChild(btn);
   });
+
+  appendNavRow(card, () => renderCard(currentIndex + 1), currentValue !== null);
+  container.appendChild(card);
 }
 
 // 2. Board Card (Optional)
-function renderBoardCard() {
-  container.innerHTML = `
-    <div class="card">
-      <h2>What is your 10th Board?</h2>
-      <p class="hint">Helps contextualize entrance exam alignment and cutoffs.</p>
-      <div class="options-grid">
-        <button class="btn-option" data-val="${BOARD.CBSE}">CBSE</button>
-        <button class="btn-option" data-val="${BOARD.ICSE}">ICSE</button>
-        <button class="btn-option" data-val="${BOARD.STATE}">State Board</button>
-        <button class="btn-option" data-val="${BOARD.OTHER}">Other</button>
-      </div>
-      <div class="card-actions">
-        <button class="btn-secondary" id="skip-board">Skip this question</button>
-      </div>
-    </div>
+function renderBoardCard(currentValue) {
+  const card = document.createElement("div");
+  card.className = "intake-card";
+  card.innerHTML = `
+    <h2>What is your 10th Board?</h2>
+    <p class="hint">Helps contextualize entrance exam alignment and cutoffs (Optional).</p>
+    <div class="option-group" id="board-options"></div>
   `;
 
-  container.querySelectorAll(".btn-option").forEach(btn => {
+  const options = [
+    { val: BOARD.CBSE, label: "CBSE" },
+    { val: BOARD.ICSE, label: "ICSE" },
+    { val: BOARD.STATE, label: "State Board" },
+    { val: BOARD.OTHER, label: "Other" }
+  ];
+
+  const group = card.querySelector("#board-options");
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = `btn-option ${currentValue === opt.val ? "selected" : ""}`;
+    btn.textContent = opt.label;
     btn.addEventListener("click", () => {
-      setBoard(btn.dataset.val);
-      nextStep();
+      setBoard(opt.val);
+      renderCard(currentIndex + 1);
     });
+    group.appendChild(btn);
   });
 
-  document.getElementById("skip-board").addEventListener("click", () => {
-    setBoard(null);
-    nextStep();
-  });
+  appendNavRow(card, () => renderCard(currentIndex + 1), true);
+  container.appendChild(card);
 }
 
-// 3. Top Interests Card (Multi-select capped at 2 via FIFO)
+// 3. Top Interests Card (Full Snapshot Re-render Pattern)
 function renderInterestsCard() {
-  const currentSnapshot = getSessionSnapshot();
-  const selected = new Set(currentSnapshot.top_interests);
-
-  container.innerHTML = `
-    <div class="card">
-      <h2>Select Your Top 2 Interests</h2>
-      <p class="hint">Pick up to 2 areas that excite you most. Selecting a 3rd rotates the oldest.</p>
-      <div class="options-grid" id="interests-grid">
-        ${INTEREST_TAGS_LIST.map(tag => `
-          <button class="btn-option ${selected.has(tag) ? 'selected' : ''}" data-tag="${tag}">
-            ${tag.replace(/_/g, ' ').toUpperCase()}
-          </button>
-        `).join('')}
-      </div>
-      <div class="card-actions">
-        <button class="btn-primary" id="confirm-interests">Continue</button>
-      </div>
-    </div>
+  const card = document.createElement("div");
+  card.className = "intake-card";
+  card.innerHTML = `
+    <h2>Select Your Top 2 Interests</h2>
+    <p class="hint">Pick up to 2 areas that excite you most. A 3rd selection replaces the 1st (FIFO).</p>
+    <div class="tag-grid" id="interest-grid"></div>
   `;
 
-  const buttons = container.querySelectorAll("#interests-grid .btn-option");
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const updatedList = toggleInterestTag(btn.dataset.tag);
-      const updatedSet = new Set(updatedList);
-      buttons.forEach(b => {
-        b.classList.toggle("selected", updatedSet.has(b.dataset.tag));
-      });
-    });
-  });
+  const grid = card.querySelector("#interest-grid");
 
-  document.getElementById("confirm-interests").addEventListener("click", () => {
-    const snap = getSessionSnapshot();
-    if (snap.top_interests.length === 0) {
-      alert("Please select at least one interest to continue.");
-      return;
+  function refreshTags() {
+    const snapshot = getSessionSnapshot();
+    const selected = snapshot.top_interests; // index 0 = 1st, index 1 = 2nd
+    grid.innerHTML = "";
+
+    INTEREST_TAGS_LIST.forEach(tag => {
+      const btn = document.createElement("button");
+      btn.className = "btn-option";
+      const rank = selected.indexOf(tag);
+
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = tag.replace(/_/g, " ").toUpperCase();
+      btn.appendChild(labelSpan);
+
+      if (rank !== -1) {
+        btn.classList.add("selected");
+        const badge = document.createElement("span");
+        badge.className = "tag-badge";
+        badge.textContent = rank === 0 ? "1st" : "2nd";
+        btn.appendChild(badge);
+      }
+
+      btn.addEventListener("click", () => {
+        toggleInterestTag(tag);
+        refreshTags(); // Unconditional full repaint
+      });
+
+      grid.appendChild(btn);
+    });
+
+    const nextBtn = card.querySelector("#card-next-btn");
+    if (nextBtn) {
+      nextBtn.disabled = selected.length === 0;
     }
-    nextStep();
-  });
+  }
+
+  refreshTags();
+  appendNavRow(card, () => renderCard(currentIndex + 1), getSessionSnapshot().top_interests.length > 0);
+  container.appendChild(card);
 }
 
 // 4. Geo / Budget Tier Card
-function renderGeoBudgetCard() {
-  container.innerHTML = `
-    <div class="card">
-      <h2>Learning Resources & Location Environment</h2>
-      <p class="hint">Identifies realistic preparation pathways (coaching vs. self-study & government tracks).</p>
-      <div class="options-grid">
-        <button class="btn-option" data-val="${GEO_BUDGET_TIER.METRO_FLEXIBLE}">Metro / Tier 1 (Open to private colleges & coaching)</button>
-        <button class="btn-option" data-val="${GEO_BUDGET_TIER.METRO_CONSTRAINED}">Metro / Tier 1 (Cost-conscious, focus on self-study)</button>
-        <button class="btn-option" data-val="${GEO_BUDGET_TIER.TIER2_3_CONSTRAINED}">Tier 2/3 or Rural (Government colleges, polytechnic, online)</button>
-      </div>
-    </div>
+function renderGeoBudgetCard(currentValue) {
+  const card = document.createElement("div");
+  card.className = "intake-card";
+  card.innerHTML = `
+    <h2>Learning Resources & Location Environment</h2>
+    <p class="hint">Identifies realistic preparation pathways (coaching vs. self-study & government tracks).</p>
+    <div class="option-group" id="geo-options"></div>
   `;
 
-  container.querySelectorAll(".btn-option").forEach(btn => {
+  const options = [
+    { val: GEO_BUDGET_TIER.METRO_FLEXIBLE, label: "Metro / Tier 1 (Open to private colleges & coaching)" },
+    { val: GEO_BUDGET_TIER.METRO_CONSTRAINED, label: "Metro / Tier 1 (Cost-conscious, focus on self-study)" },
+    { val: GEO_BUDGET_TIER.TIER2_3_CONSTRAINED, label: "Tier 2/3 or Rural (Government colleges, polytechnic, online)" }
+  ];
+
+  const group = card.querySelector("#geo-options");
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = `btn-option ${currentValue === opt.val ? "selected" : ""}`;
+    btn.textContent = opt.label;
     btn.addEventListener("click", () => {
-      setGeoBudgetTier(btn.dataset.val);
-      nextStep();
+      setGeoBudgetTier(opt.val);
+      renderCard(currentIndex + 1);
     });
+    group.appendChild(btn);
   });
+
+  appendNavRow(card, () => renderCard(currentIndex + 1), currentValue !== null);
+  container.appendChild(card);
 }
 
 // 5. Path Signal Card
-function renderPathSignalCard() {
-  container.innerHTML = `
-    <div class="card">
-      <h2>Post-10th Path Preference</h2>
-      <p class="hint">Choose your preferred academic format.</p>
-      <div class="options-grid">
-        <button class="btn-option" data-val="${PATH_SIGNAL.TRADITIONAL}">Traditional 11th & 12th (Higher Secondary / Junior College)</button>
-        <button class="btn-option" data-val="${PATH_SIGNAL.POLYTECHNIC_CURIOUS}">3-Year Polytechnic Diploma (Hands-on, direct lateral entry to B.Tech)</button>
-        <button class="btn-option" data-val="${PATH_SIGNAL.UNDECIDED}">Undecided / Open to recommendation</button>
-      </div>
-    </div>
+function renderPathSignalCard(currentValue) {
+  const card = document.createElement("div");
+  card.className = "intake-card";
+  card.innerHTML = `
+    <h2>Post-10th Path Preference</h2>
+    <p class="hint">Choose your preferred academic format.</p>
+    <div class="option-group" id="signal-options"></div>
   `;
 
-  container.querySelectorAll(".btn-option").forEach(btn => {
+  const options = [
+    { val: PATH_SIGNAL.TRADITIONAL, label: "Traditional 11th & 12th (Higher Secondary / Junior College)" },
+    { val: PATH_SIGNAL.POLYTECHNIC_CURIOUS, label: "3-Year Polytechnic Diploma (Hands-on, direct lateral entry to B.Tech)" },
+    { val: PATH_SIGNAL.UNDECIDED, label: "Undecided / Open to recommendation" }
+  ];
+
+  const group = card.querySelector("#signal-options");
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = `btn-option ${currentValue === opt.val ? "selected" : ""}`;
+    btn.textContent = opt.label;
     btn.addEventListener("click", () => {
-      setPathSignal(btn.dataset.val);
-      nextStep();
+      setPathSignal(opt.val);
+      renderCard(currentIndex + 1);
     });
+    group.appendChild(btn);
   });
+
+  appendNavRow(card, () => renderCard(currentIndex + 1), currentValue !== null);
+  container.appendChild(card);
+}
+
+// Result Block Helper
+function buildPathwayBlock(data, isPrimary = true) {
+  const block = document.createElement("div");
+  block.className = `pathway-block ${isPrimary ? "primary" : "secondary"}`;
+  block.innerHTML = `
+    <span class="stream-tag">${data.stream || "Recommended Stream"}</span>
+    <h3>${data.title}</h3>
+    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">${data.summary}</p>
+    
+    <section>
+      <strong>11th & 12th / Foundation Focus:</strong>
+      <ul>${(data.highSchoolFocus || []).map(item => `<li>${item}</li>`).join("")}</ul>
+    </section>
+
+    <section>
+      <strong>Target Degrees / Diplomas:</strong>
+      <ul>${(data.undergradDegrees || []).map(item => `<li>${item}</li>`).join("")}</ul>
+    </section>
+
+    <section>
+      <strong>Recommended Free Foundations:</strong>
+      <ul>${(data.freeResources || []).map(item => `<li>${item}</li>`).join("")}</ul>
+    </section>
+  `;
+  return block;
 }
 
 // 6. Result Card Renderer
-function renderResultCard() {
+async function renderResultCard() {
+  // Guard against race condition: await content fetch if fast user arrived early
+  if (careerContentCache === null && contentLoadPromise) {
+    await contentLoadPromise;
+  }
+
   const snapshot = getSessionSnapshot();
   const result = getRoutingResult(snapshot);
-  const primaryData = careerData?.pathways[result.pathway_key];
-  const secondaryData = result.secondary_pathway_key ? careerData?.pathways[result.secondary_pathway_key] : null;
+  const isForked = Boolean(result.secondary_pathway_key);
 
-  container.innerHTML = `
-    <div class="card">
-      <h2>Recommended AI Career Pathway</h2>
-      <p class="hint">Confidence: <strong>${result.confidence.toUpperCase()}</strong></p>
+  const card = document.createElement("div");
+  card.className = `result-card ${isForked ? "result-card--forked" : ""}`;
 
-      <div class="result-box">
-        <span class="tag">${primaryData?.stream || "Recommended Stream"}</span>
-        <h3 style="margin-top: 0.5rem; color: var(--primary);">${primaryData?.title || result.pathway_key}</h3>
-        <p style="margin: 0.5rem 0; font-size: 0.9rem;">${primaryData?.summary || ""}</p>
-        
-        <div style="margin-top: 0.75rem;">
-          <strong>11th & 12th Focus:</strong>
-          <ul style="padding-left: 1.25rem; font-size: 0.875rem; margin-top: 0.25rem;">
-            ${primaryData?.highSchoolFocus?.map(item => `<li>${item}</li>`).join('') || ''}
-          </ul>
-        </div>
-
-        <div style="margin-top: 0.75rem;">
-          <strong>Target Degrees:</strong>
-          <ul style="padding-left: 1.25rem; font-size: 0.875rem; margin-top: 0.25rem;">
-            ${primaryData?.undergradDegrees?.map(item => `<li>${item}</li>`).join('') || ''}
-          </ul>
-        </div>
-
-        <div style="margin-top: 0.75rem;">
-          <strong>Recommended Free Foundations:</strong>
-          <ul style="padding-left: 1.25rem; font-size: 0.875rem; margin-top: 0.25rem;">
-            ${primaryData?.freeResources?.map(item => `<li>${item}</li>`).join('') || ''}
-          </ul>
-        </div>
+  let headerHTML = `<h2>Recommended Career Pathway</h2>`;
+  if (result.confidence === "hedged") {
+    headerHTML += `
+      <div class="hedge-banner">
+        <strong>Exploratory Fit:</strong> Based on partial or untested inputs. Use this roadmap as a flexible guide to explore further.
       </div>
+    `;
+  }
+  card.innerHTML = headerHTML;
 
-      ${secondaryData ? `
-        <div class="result-box" style="margin-top: 1rem; border-left: 4px solid var(--accent);">
-          <span class="tag">Alternative Hybrid Pathway</span>
-          <h3 style="margin-top: 0.5rem;">${secondaryData.title}</h3>
-          <p style="margin: 0.5rem 0; font-size: 0.9rem;">${secondaryData.summary}</p>
-        </div>
-      ` : ''}
+  const primaryData = careerContentCache[result.pathway_key];
 
-      <div class="card-actions">
-        <button class="btn-secondary" id="restart-btn">Restart Assessment</button>
-      </div>
-    </div>
-  `;
+  // Defensive fallback guard
+  if (!primaryData) {
+    const errorBox = document.createElement("div");
+    errorBox.className = "hedge-banner";
+    errorBox.textContent = "Details for this specific pathway could not be loaded. Please refresh to try again.";
+    card.appendChild(errorBox);
+    container.appendChild(card);
+    return;
+  }
 
-  document.getElementById("restart-btn").addEventListener("click", () => {
+  if (isForked) {
+    const explainer = document.createElement("div");
+    explainer.className = "fork-explainer";
+    explainer.innerHTML = `<strong>Hybrid Fit Detected:</strong> Your combination of strong analytical skills and humanities/communication interests opens two distinct paths. Consider either option below:`;
+    card.appendChild(explainer);
+
+    const forkContainer = document.createElement("div");
+    forkContainer.className = "fork-container";
+    forkContainer.appendChild(buildPathwayBlock(primaryData, true));
+
+    const secondaryData = careerContentCache[result.secondary_pathway_key];
+    if (secondaryData) {
+      forkContainer.appendChild(buildPathwayBlock(secondaryData, false));
+    }
+    card.appendChild(forkContainer);
+  } else {
+    card.appendChild(buildPathwayBlock(primaryData, true));
+  }
+
+  // Restart Button
+  const actions = document.createElement("div");
+  actions.className = "nav-row";
+  actions.style.justifyContent = "center";
+  const restartBtn = document.createElement("button");
+  restartBtn.className = "btn-secondary";
+  restartBtn.textContent = "↺ Start Over with Clean Profile";
+  restartBtn.addEventListener("click", () => {
     resetSession();
-    currentIndex = 0;
-    updateProgress();
-    CARD_SEQUENCE[0].render();
+    renderCard(0);
   });
+  actions.appendChild(restartBtn);
+  card.appendChild(actions);
+
+  container.appendChild(card);
 }
 
-// Initialize application
-document.addEventListener("DOMContentLoaded", async () => {
-  await initContent();
-  updateProgress();
-  CARD_SEQUENCE[0].render();
+// Initial Boot
+document.addEventListener("DOMContentLoaded", () => {
+  preloadCareerContent(); // Background preload (non-blocking)
+  renderCard(0);          // First paint immediately
 });

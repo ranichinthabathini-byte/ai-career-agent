@@ -6,7 +6,10 @@
   --text: #0f172a;
   --muted: #64748b;
   --border: #e2e8f0;
-  --accent: #10b981;
+  --accent: #059669;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-text: #92400e;
 }
 
 * {
@@ -26,7 +29,7 @@ body {
 
 .app-layout {
   width: 100%;
-  max-width: 540px;
+  max-width: 620px;
 }
 
 header {
@@ -45,7 +48,8 @@ header h1 {
   margin-top: 0.25rem;
 }
 
-.card {
+/* Generic Intake Card Layout */
+.intake-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -53,24 +57,28 @@ header h1 {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.card h2 {
+.intake-card h2 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
 }
 
-.card p.hint {
+.intake-card .hint {
   font-size: 0.875rem;
   color: var(--muted);
   margin-bottom: 1.25rem;
 }
 
-.options-grid {
+/* Option Groups (Single Select) */
+.intake-card .option-group {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
 .btn-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: #fff;
   border: 1.5px solid var(--border);
   border-radius: 8px;
@@ -92,10 +100,36 @@ header h1 {
   color: var(--primary);
 }
 
-.card-actions {
+/* Tag Grid (Multi Select) */
+.intake-card .tag-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .intake-card .tag-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tag-badge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+/* Card Navigation Actions */
+.nav-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 1.5rem;
+  align-items: center;
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
 }
 
 .btn-primary {
@@ -103,9 +137,15 @@ header h1 {
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 0.75rem 1.25rem;
+  padding: 0.7rem 1.25rem;
   cursor: pointer;
   font-weight: 600;
+}
+
+.btn-primary:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 .btn-secondary {
@@ -113,21 +153,88 @@ header h1 {
   color: var(--muted);
   border: none;
   cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+  color: var(--text);
   text-decoration: underline;
 }
 
-.result-box {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  background: #f1f5f9;
+/* Result Card Architecture */
+.result-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.tag {
+.hedge-banner {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.fork-explainer {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin: 1.25rem 0;
+}
+
+.pathway-block {
+  padding: 1.25rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+.pathway-block.secondary {
+  border-left: 4px solid var(--accent);
+}
+
+.pathway-block .stream-tag {
   display: inline-block;
   background: #e2e8f0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  margin-right: 0.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.pathway-block h3 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.pathway-block ul {
+  padding-left: 1.2rem;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.pathway-block section {
+  margin-top: 0.75rem;
+}
+
+/* Structural Modifier for Fork Layout on Desktop */
+@media (min-width: 600px) {
+  .result-card--forked .fork-container {
+    display: flex;
+    gap: 1rem;
+  }
+  .result-card--forked .pathway-block {
+    flex: 1;
+    margin-top: 0;
+  }
 }
