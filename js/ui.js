@@ -26,7 +26,7 @@ let currentIndex = 0;
 let careerContentCache = null;
 let contentLoadPromise = null;
 
-// Background preload: non-blocking at startup, guarded at result screen
+// Preload content in the background
 function preloadCareerContent() {
   contentLoadPromise = fetch("data/career-content.json")
     .then(res => res.json())
@@ -35,11 +35,11 @@ function preloadCareerContent() {
     })
     .catch(err => {
       console.error("Failed to load career content", err);
-      careerContentCache = {}; // empty object fallback, never null
+      careerContentCache = {};
     });
 }
 
-// Card sequence definition
+// Card sequence definitions
 const CARD_SEQUENCE = [
   { field: "math_comfort", render: renderMathCard, optional: false },
   { field: "board", render: renderBoardCard, optional: true },
@@ -49,17 +49,24 @@ const CARD_SEQUENCE = [
 ];
 
 function updateProgress() {
+  const progressBar = document.getElementById("progress-bar");
+  
   if (currentIndex < CARD_SEQUENCE.length) {
-    progressText.textContent = `Step ${currentIndex + 1} of ${CARD_SEQUENCE.length}`;
+    if (progressText) progressText.textContent = `Step ${currentIndex + 1} of ${CARD_SEQUENCE.length}`;
+    if (progressBar) progressBar.style.width = `${((currentIndex + 1) / CARD_SEQUENCE.length) * 100}%`;
   } else {
-    progressText.textContent = "Your Recommendation";
+    if (progressText) progressText.textContent = "Your Recommendation";
+    if (progressBar) progressBar.style.width = "100%";
   }
 }
 
-// Idempotent card renderer (destroys and rebuilds DOM cleanly)
+
+
+// Render card cleanly from current index
 function renderCard(index) {
   currentIndex = index;
   updateProgress();
+  if (!container) return;
   container.innerHTML = "";
 
   if (currentIndex >= CARD_SEQUENCE.length) {
@@ -74,12 +81,11 @@ function renderCard(index) {
   cardDef.render(currentValue);
 }
 
-// Shared Navigation Row Helper
+// Helper: Append standardized navigation buttons
 function appendNavRow(cardElement, onNext, isNextEnabled = true) {
   const nav = document.createElement("div");
   nav.className = "nav-row";
 
-  // Back Button
   if (currentIndex > 0) {
     const backBtn = document.createElement("button");
     backBtn.className = "btn-secondary";
@@ -87,10 +93,9 @@ function appendNavRow(cardElement, onNext, isNextEnabled = true) {
     backBtn.addEventListener("click", () => renderCard(currentIndex - 1));
     nav.appendChild(backBtn);
   } else {
-    nav.appendChild(document.createElement("div")); // Spacer
+    nav.appendChild(document.createElement("div"));
   }
 
-  // Next Button
   const nextBtn = document.createElement("button");
   nextBtn.className = "btn-primary";
   nextBtn.id = "card-next-btn";
@@ -168,7 +173,7 @@ function renderBoardCard(currentValue) {
   container.appendChild(card);
 }
 
-// 3. Top Interests Card (Full Snapshot Re-render Pattern)
+// 3. Top Interests Card
 function renderInterestsCard() {
   const card = document.createElement("div");
   card.className = "intake-card";
@@ -182,7 +187,7 @@ function renderInterestsCard() {
 
   function refreshTags() {
     const snapshot = getSessionSnapshot();
-    const selected = snapshot.top_interests; // index 0 = 1st, index 1 = 2nd
+    const selected = snapshot.top_interests;
     grid.innerHTML = "";
 
     INTEREST_TAGS_LIST.forEach(tag => {
@@ -204,7 +209,7 @@ function renderInterestsCard() {
 
       btn.addEventListener("click", () => {
         toggleInterestTag(tag);
-        refreshTags(); // Unconditional full repaint
+        refreshTags();
       });
 
       grid.appendChild(btn);
@@ -285,7 +290,7 @@ function renderPathSignalCard(currentValue) {
   container.appendChild(card);
 }
 
-// Result Block Helper
+// Helper: Build pathway result display blocks
 function buildPathwayBlock(data, isPrimary = true) {
   const block = document.createElement("div");
   block.className = `pathway-block ${isPrimary ? "primary" : "secondary"}`;
@@ -314,7 +319,6 @@ function buildPathwayBlock(data, isPrimary = true) {
 
 // 6. Result Card Renderer
 async function renderResultCard() {
-  // Guard against race condition: await content fetch if fast user arrived early
   if (careerContentCache === null && contentLoadPromise) {
     await contentLoadPromise;
   }
@@ -338,7 +342,6 @@ async function renderResultCard() {
 
   const primaryData = careerContentCache[result.pathway_key];
 
-  // Defensive fallback guard
   if (!primaryData) {
     const errorBox = document.createElement("div");
     errorBox.className = "hedge-banner";
@@ -367,18 +370,27 @@ async function renderResultCard() {
     card.appendChild(buildPathwayBlock(primaryData, true));
   }
 
-  // Restart Button
+  // Result Actions: Print / PDF and Restart
   const actions = document.createElement("div");
-  actions.className = "nav-row";
-  actions.style.justifyContent = "center";
+  actions.className = "nav-row result-actions";
+  actions.style.justifyContent = "space-between";
+
   const restartBtn = document.createElement("button");
   restartBtn.className = "btn-secondary";
-  restartBtn.textContent = "↺ Start Over with Clean Profile";
+  restartBtn.textContent = "↺ Start Over";
   restartBtn.addEventListener("click", () => {
     resetSession();
     renderCard(0);
   });
+
+  const printBtn = document.createElement("button");
+  printBtn.className = "btn-primary";
+  printBtn.id = "save-pdf-btn";
+  printBtn.textContent = "🖨️ Print / Save as PDF";
+  printBtn.addEventListener("click", () => window.print());
+
   actions.appendChild(restartBtn);
+  actions.appendChild(printBtn);
   card.appendChild(actions);
 
   container.appendChild(card);
@@ -386,6 +398,6 @@ async function renderResultCard() {
 
 // Initial Boot
 document.addEventListener("DOMContentLoaded", () => {
-  preloadCareerContent(); // Background preload (non-blocking)
-  renderCard(0);          // First paint immediately
+  preloadCareerContent();
+  renderCard(0);
 });

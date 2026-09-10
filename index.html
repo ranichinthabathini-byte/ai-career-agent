@@ -3,18 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Career Agent - 10th Career Roadmap</title>
+  <title>AI Career Agent - 10th Class Roadmap</title>
+  
+  <!-- Modern Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/style.css">
-  <script type="module" src="js/ui.js" defer></script>
+  
+  <script type="module" src="js/taxonomy.js"></script>
+  <script type="module" src="js/state.js"></script>
+  <script type="module" src="js/routing.js"></script>
+  <script type="module" src="js/ui.js"></script>
 </head>
 <body>
-  <header class="app-header">
-    <h1>AI Career Agent</h1>
-    <p class="tagline">Map your post-10th pathway to Artificial Intelligence</p>
-  </header>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
 
-  <main id="card-container" class="card-container">
-    <!-- Rendered dynamically by ui.js -->
-  </main>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="badge-pill">Autonomous Guidance Engine</div>
+      <h1>AI Career Agent</h1>
+      <p class="subtitle">Personalized post-10th roadmap targeting modern tech & AI careers</p>
+      
+      <div class="progress-track">
+        <div class="progress-bar" id="progress-bar" style="width: 20%;"></div>
+      </div>
+      <p id="progress-indicator">Step 1 of 5</p>
+    </header>
+
+    <main id="card-container">
+      <!-- Cards render dynamically here -->
+    </main>
+  </div>
 </body>
 </html>
