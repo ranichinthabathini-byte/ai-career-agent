@@ -1,240 +1,449 @@
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg: #f8fafc;
-  --card-bg: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --accent: #059669;
-  --warning-bg: #fffbeb;
-  --warning-border: #fde68a;
-  --warning-text: #92400e;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-glow: rgba(79, 70, 229, 0.25);
+  --accent: #06b6d4;
+  --accent-green: #10b981;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #f8fafc 0%, #e2e8f0 100%);
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-hover: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: rgba(226, 232, 240, 0.8);
+  --card-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.05);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  padding: 1.5rem 1rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background Ambient Glows */
+.ambient-glow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+  opacity: 0.6;
+}
+.glow-1 {
+  background: rgba(99, 102, 241, 0.2);
+  top: -40px;
+  left: 20%;
+}
+.glow-2 {
+  background: rgba(6, 182, 212, 0.2);
+  top: 120px;
+  right: 20%;
 }
 
 .app-layout {
   width: 100%;
-  max-width: 620px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-header {
-  margin-bottom: 1.5rem;
+/* Header Area */
+.app-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
-header h1 {
-  font-size: 1.75rem;
+.badge-pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--primary);
+  background: rgba(79, 70, 229, 0.08);
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  margin-bottom: 0.75rem;
+}
+
+.app-header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #0f172a 30%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+}
+
+/* Dynamic Progress Bar */
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(226, 232, 240, 0.7);
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  border-radius: 10px;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #progress-indicator {
-  font-size: 0.875rem;
-  color: var(--muted);
-  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
 }
 
-/* Generic Intake Card Layout */
-.intake-card {
-  background: var(--card-bg);
+/* Interactive Cards */
+.intake-card,
+.result-card {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+  animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.intake-card h2 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.intake-card .hint {
-  font-size: 0.875rem;
-  color: var(--muted);
-  margin-bottom: 1.25rem;
+.intake-card h2,
+.result-card h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
 }
 
-/* Option Groups (Single Select) */
-.intake-card .option-group {
+.intake-card .hint,
+.result-card .hint {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.45;
+}
+
+/* Option Groups & Custom Buttons */
+.option-group {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .btn-option {
+  position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: #fff;
+  justify-content: space-between;
+  width: 100%;
+  background: #ffffff;
   border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  padding: 1.05rem 1.25rem;
   font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
   text-align: left;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .btn-option:hover {
   border-color: var(--primary);
+  background: #fdfdfd;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 14px var(--primary-glow);
 }
 
 .btn-option.selected {
   border-color: var(--primary);
-  background-color: #eff6ff;
-  font-weight: 600;
+  background: #f5f3ff;
   color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
-/* Tag Grid (Multi Select) */
-.intake-card .tag-grid {
+/* Multi-select Tag Grid */
+.tag-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
-@media (max-width: 480px) {
-  .intake-card .tag-grid {
+@media (max-width: 500px) {
+  .tag-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .tag-badge {
-  background: var(--primary);
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
   color: #fff;
-  font-size: 0.75rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 12px;
-  font-weight: bold;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.25);
 }
 
-/* Card Navigation Actions */
+/* Nav Actions */
 .nav-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: #fff;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
-  padding: 0.7rem 1.25rem;
-  cursor: pointer;
+  border-radius: 12px;
+  padding: 0.85rem 1.6rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--primary-glow);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px var(--primary-glow);
 }
 
 .btn-primary:disabled {
-  background: var(--border);
-  color: var(--muted);
+  background: #cbd5e1;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--muted);
+  color: var(--text-muted);
   border: none;
-  cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  transition: color 0.15s ease;
 }
 
 .btn-secondary:hover {
-  color: var(--text);
-  text-decoration: underline;
+  color: var(--text-main);
 }
 
-/* Result Card Architecture */
-.result-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
+/* Result Cards & Pathway Display */
 .hedge-banner {
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
   margin-bottom: 1.25rem;
 }
 
 .fork-explainer {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  margin: 1.25rem 0;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
 }
 
 .pathway-block {
-  padding: 1.25rem;
-  border-radius: 8px;
-  background: #f8fafc;
-  border: 1px solid var(--border);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
   margin-top: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
 }
 
 .pathway-block.secondary {
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid var(--accent-green);
 }
 
 .pathway-block .stream-tag {
   display: inline-block;
-  background: #e2e8f0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  background: #eef2ff;
+  color: var(--primary);
   font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
 }
 
 .pathway-block h3 {
-  color: var(--primary);
+  font-size: 1.2rem;
+  color: #0f172a;
   margin-bottom: 0.5rem;
 }
 
 .pathway-block ul {
   padding-left: 1.2rem;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 0.88rem;
+  color: #334155;
+  margin-top: 0.4rem;
+  line-height: 1.6;
 }
 
 .pathway-block section {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
 }
 
-/* Structural Modifier for Fork Layout on Desktop */
-@media (min-width: 600px) {
-  .result-card--forked .fork-container {
-    display: flex;
-    gap: 1rem;
+/* Print CSS */
+/* ==========================================================
+   Print / PDF Export Rules
+   ========================================================== */
+@page {
+  margin: 1.5cm;
+  size: A4 portrait;
+}
+
+@media print {
+  /* 1. Complete exclusion of non-printable UI chrome */
+  header,
+  .app-header,
+  .ambient-glow,
+  .badge-pill,
+  .subtitle,
+  .progress-track,
+  #progress-indicator,
+  .nav-row,
+  .result-actions,
+  #save-pdf-btn,
+  .btn-secondary {
+    display: none !important;
   }
-  .result-card--forked .pathway-block {
-    flex: 1;
-    margin-top: 0;
+
+  /* 2. Page layout & high-contrast grayscale normalization */
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+  }
+
+  .app-layout {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .result-card {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Text & line adjustments for print contrast */
+  .result-card h2 {
+    color: #000000 !important;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Grayscale fallback for status indicators */
+  .hedge-banner {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1.5px dashed #475569 !important;
+    padding: 0.75rem !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .fork-explainer {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1.5px solid #000000 !important;
+    padding: 0.75rem !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 3. Unstack desktop flex row into vertical blocks to prevent awkward page splits */
+  .result-card--forked .fork-container {
+    display: block !important;
+  }
+
+  .pathway-block {
+    display: block !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #94a3b8 !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 1.5cm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .pathway-block.secondary {
+    border-left: 4px solid #000000 !important;
+  }
+
+  .pathway-block .stream-tag {
+    background: transparent !important;
+    border: 1px solid #475569 !important;
+    color: #000000 !important;
+  }
+
+  .pathway-block h3,
+  .pathway-block strong,
+  .pathway-block li {
+    color: #000000 !important;
   }
 }
