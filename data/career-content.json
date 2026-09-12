@@ -1,0 +1,217 @@
+{
+  "pathways": {
+    "CS_CORE_ACCELERATED": {
+      "title": "Core Accelerated Computer Science",
+      "stream": "Intermediate / 11th & 12th MPC",
+      "summary": "Fast-tracked engineering track prioritizing rigorous mathematics, algorithmic problem solving, and competitive programming.",
+      "highSchoolFocus": [
+        "Advanced Calculus, Coordinate Geometry, and Algebra",
+        "Foundational Physics and Chemistry for engineering entrances",
+        "Competitive programming fundamentals (C++ or Python)"
+      ],
+      "undergradDegrees": [
+        "B.Tech / B.E. in Computer Science and Engineering",
+        "B.Tech in Artificial Intelligence & Data Science",
+        "Integrated M.Tech / BS in Computing"
+      ],
+      "freeResources": [
+        "CS50x: Introduction to Computer Science (Harvard / edX)",
+        "Khan Academy (Multivariable Calculus & Linear Algebra)",
+        "NeetCode / LeetCode Roadmap"
+      ]
+    },
+    "CS_APPLIED_EXPLORATORY": {
+      "title": "Applied Software & Practical Tech",
+      "stream": "Intermediate / 11th & 12th MPC or State Board",
+      "summary": "Hands-on software development track emphasizing real-world projects, modern web stacks, and practical application building.",
+      "highSchoolFocus": [
+        "Applied Mathematics and practical computer science electives",
+        "Front-end web development (HTML, CSS, JavaScript)",
+        "Open-source collaboration and project building"
+      ],
+      "undergradDegrees": [
+        "B.Tech in Information Technology",
+        "BCA (Bachelor of Computer Applications)",
+        "B.Sc in Computer Science or Software Development"
+      ],
+      "freeResources": [
+        "The Odin Project (Full Stack Curriculum)",
+        "freeCodeCamp Responsive Web Design & JavaScript",
+        "MDN Web Docs"
+      ]
+    },
+    "POLYTECHNIC_DIPLOMA": {
+      "title": "Polytechnic Diploma in Engineering",
+      "stream": "3-Year Polytechnic Diploma (Post-10th)",
+      "summary": "A practical, laboratory-first technical pathway with direct lateral entry into the 2nd year of B.Tech.",
+      "highSchoolFocus": [
+        "POLYCET entrance exam preparation",
+        "Hands-on electronics, computing, or mechanical workshops",
+        "Core technical foundation subjects"
+      ],
+      "undergradDegrees": [
+        "Lateral Entry into B.Tech 2nd Year (via ECET)",
+        "Direct Associate Engineer Industry Roles",
+        "Advanced Specialization Certifications"
+      ],
+      "freeResources": [
+        "State Board of Technical Education curriculum notes",
+        "NPTEL Diploma Support Courses"
+      ]
+    },
+    "VOCATIONAL_SELF_PACED": {
+      "title": "Vocational & Applied Technical Track",
+      "stream": "Vocational Stream / National Skills Qualification Framework",
+      "summary": "Cost-effective, highly applied track focusing on rapid skill acquisition and direct entry into tech support or junior development.",
+      "highSchoolFocus": [
+        "Computer operations and basic system administration",
+        "Practical coding and database fundamentals",
+        "Apprenticeship preparation"
+      ],
+      "undergradDegrees": [
+        "B.Voc (Bachelor of Vocation) in Software Development",
+        "Diploma in IT Infrastructure",
+        "Industry-recognized certifications"
+      ],
+      "freeResources": [
+        "SWAYAM Vocational Portal",
+        "Google Career Certificates (IT Support / Automation)"
+      ]
+    },
+    "AI_HUMANITIES_HYBRID": {
+      "title": "AI, Design & Cognitive Sciences Hybrid",
+      "stream": "11th & 12th Humanities / Commerce with Math or Informatics",
+      "summary": "Interdisciplinary track connecting artificial intelligence with human-computer interaction, cognitive psychology, ethics, and digital product design.",
+      "highSchoolFocus": [
+        "Psychology, Economics, and Design thinking electives",
+        "Introductory statistics and user research methods",
+        "UCEED / NID / CUET entrance exam prep"
+      ],
+      "undergradDegrees": [
+        "B.Des in Interaction Design / Human-Computer Interaction",
+        "B.Sc in Cognitive Science or Digital Humanities",
+        "B.A. in Media, Communication & Technology"
+      ],
+      "freeResources": [
+        "Interaction Design Foundation Open Guides",
+        "Google UX Design Certificate materials"
+      ]
+    },
+    "MPC_ENGINEERING": {
+      "title": "MPC (Mathematics, Physics, Chemistry) — Engineering & Tech Track",
+      "stream": "Intermediate / 11th & 12th MPC",
+      "summary": "The premier foundation for algorithmic thinking, hardware engineering, core sciences, and technical innovation.",
+      "highSchoolFocus": [
+        "Rigorous mastery of Calculus, Linear Algebra, and Coordinate Geometry",
+        "Physics: Mechanics, Electromagnetism, and Modern Physics foundations",
+        "Entrance prep: JEE Main/Advanced, State CETs (EAMCET, KCET, MHT-CET)"
+      ],
+      "undergradDegrees": [
+        "B.Tech / B.E. in Computer Science, AI & Machine Learning, or Electronics (ECE)",
+        "B.Tech in Mechanical, Electrical, Civil, or Robotics Engineering",
+        "Integrated M.Sc / BS in Data Science or Applied Mathematics"
+      ],
+      "freeResources": [
+        "Khan Academy (Advanced Calculus & Physics)",
+        "MIT OpenCourseWare (Single Variable Calculus)",
+        "NPTEL IIT Foundation Courses"
+      ]
+    },
+    "BIPC_MEDICINE": {
+      "title": "BiPC (Biology, Physics, Chemistry) — Medical & Healthcare Track",
+      "stream": "Intermediate / 11th & 12th BiPC",
+      "summary": "Targeted pathway for clinical medical sciences, clinical pharmacology, and biological research.",
+      "highSchoolFocus": [
+        "Human Physiology, Genetics, Molecular Biology, and Botany",
+        "Organic Chemistry and Basic Biophysics",
+        "NEET-UG and AIIMS entrance preparation"
+      ],
+      "undergradDegrees": [
+        "MBBS, BDS (Dental), BAMS/BHMS",
+        "B.Pharm (Pharmaceutical Sciences)",
+        "B.Sc Nursing, Biotechnology, or Allied Health Sciences"
+      ],
+      "freeResources": [
+        "NCERT Exemplar Solutions",
+        "Armando Hasudungan Biology Diagrams",
+        "Khan Academy Pre-Med modules"
+      ]
+    },
+    "PCMB_HYBRID": {
+      "title": "PCMB (Physics, Chemistry, Maths, Biology) — Computational Biology Track",
+      "stream": "Intermediate / 11th & 12th PCMB",
+      "summary": "Combines biological sciences with quantitative modeling, leading directly into Bioinformatics, Genomics, and Bio-AI.",
+      "highSchoolFocus": [
+        "Equal focus on Higher Mathematics and Modern Genetics/Cell Biology",
+        "Organic and Physical Chemistry",
+        "Preparation for both Engineering (JEE/CET) and Medical/Research (NEET/IISER) tests"
+      ],
+      "undergradDegrees": [
+        "B.Tech / BS in Bioinformatics or Biomedical Engineering",
+        "BS-MS at IISER / IISc in Quantitative Biology",
+        "Dual Degree in Computational Biology"
+      ],
+      "freeResources": [
+        "Rosalind.info (Bioinformatics problem sets)",
+        "Khan Academy AP Biology & Calculus"
+      ]
+    },
+    "MEC_COMMERCE_DATA": {
+      "title": "MEC (Mathematics, Economics, Commerce) — Fintech & Data Track",
+      "stream": "Intermediate / 11th & 12th MEC",
+      "summary": "Blends commercial logic with analytical math, ideal for quantitative finance, economics, and business analytics.",
+      "highSchoolFocus": [
+        "Applied Mathematics, Statistics, and Financial Accounting",
+        "Micro and Macro Economics",
+        "CUET, IPMAT (IIM 5-year integrated management), and CA Foundation"
+      ],
+      "undergradDegrees": [
+        "B.Com (Honours / Analytics), BBA (Finance/Fintech)",
+        "B.Sc Statistics or Data Economics",
+        "Chartered Accountancy (CA), CFA Track"
+      ],
+      "freeResources": [
+        "Zerodha Varsity (Financial Markets)",
+        "Khan Academy Microeconomics"
+      ]
+    },
+    "CEC_COMMERCE_MANAGEMENT": {
+      "title": "CEC (Commerce, Economics, Civics) — Corporate & Business Management Track",
+      "stream": "Intermediate / 11th & 12th CEC",
+      "summary": "Focuses on business administration, corporate operations, law, and organizational leadership without pure calculus pressure.",
+      "highSchoolFocus": [
+        "Commercial Accounting, Auditing, and Corporate Governance",
+        "Civics, Indian Constitution, and Economic Policy",
+        "CUET and IPMAT preparation"
+      ],
+      "undergradDegrees": [
+        "BBA / BMS (Bachelor of Management Studies)",
+        "B.Com (General / Corporate Administration)",
+        "Integrated BBA-LLB (5-Year Law)"
+      ],
+      "freeResources": [
+        "Investopedia Corporate Finance",
+        "Khan Academy Macroeconomics"
+      ]
+    },
+    "HEC_HUMANITIES_ARTS": {
+      "title": "HEC (History, Economics, Civics) — Humanities, Policy & Law Track",
+      "stream": "Intermediate / 11th & 12th HEC",
+      "summary": "The definitive foundation for constitutional law, civil services, international relations, public policy, and creative arts.",
+      "highSchoolFocus": [
+        "Modern & Contemporary World History, Political Systems",
+        "Public Policy and Constitutional Law",
+        "CLAT (Common Law Admission Test) & CUET preparation"
+      ],
+      "undergradDegrees": [
+        "B.A. LL.B (5-Year National Law University track)",
+        "B.A. (Honours) in Political Science, International Relations, or Economics",
+        "B.Des / B.A. in Journalism and Mass Communication"
+      ],
+      "freeResources": [
+        "Coursera / edX (Intro to Constitutional Law)",
+        "Khan Academy World History"
+      ]
+    }
+  }
+}
