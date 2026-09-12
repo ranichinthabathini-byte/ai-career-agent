@@ -1,146 +1,145 @@
-// js/routing.js
-import { 
-  MATH_COMFORT, 
-  PATH_SIGNAL, 
-  INTEREST_TAGS 
+import {
+  MATH_COMFORT,
+  BOARD,
+  GEO_BUDGET_TIER,
+  PATH_SIGNAL,
+  INTEREST_TAGS,
+  PATHWAY_KEYS
 } from "./taxonomy.js";
 
-// Mapping of interests to their natural stream affinity
-const INTEREST_STREAM_MAP = Object.freeze({
-  [INTEREST_TAGS.LOGIC_SYSTEMS]: "PCM",
-  [INTEREST_TAGS.HARDWARE_TINKERING]: "PCM",
-  [INTEREST_TAGS.EXPERIMENTATION_SCIENCE]: "PCM",
-  [INTEREST_TAGS.BIOLOGY_HEALTH]: "PCB",
-  [INTEREST_TAGS.BUSINESS_STRATEGY]: "COMMERCE",
-  [INTEREST_TAGS.DESIGN_VISUAL]: "ARTS",
-  [INTEREST_TAGS.WRITING_COMMUNICATION]: "ARTS",
-  [INTEREST_TAGS.PEOPLE_FACING]: "ARTS"
-});
-
-// Mapping of (Stream + Interest) to exact pathway keys
-function mapStreamToPathway(stream, primaryInterest) {
-  switch (stream) {
-    case "PCM":
-      return "PCM_CORE_AI";
-    case "PCB":
-      return "PCB_HEALTHTECH_AI";
-    case "COMMERCE":
-      return "COMMERCE_DATA_AI";
-    case "ARTS":
-      return "ARTS_AI_ETHICS";
-    default:
-      return "GENERAL_EXPLORE";
-  }
-}
-
-// Gate 0: Short-circuit for polytechnic path signal
-function routeToPolytechnic(snapshot, reasoning) {
-  reasoning.push("gate0:polytechnic_path_selected");
-  return {
-    pathway_key: "POLYTECHNIC_HARDWARE_AI",
-    confidence: "high",
-    reasoning_tags: reasoning
-  };
-}
-
-// Gate 2 Conflict Fallback
-function handleGate2Conflict(snapshot, confidence, reasoning) {
-  const primary = snapshot.top_interests[0];
-  reasoning.push(`gate2_conflict:unmatched_primary_${primary}`);
-
-  // Fallback: Weak math with strong system/hardware interests maps cleanly to Polytechnic
-  if (
-    snapshot.math_comfort === MATH_COMFORT.WEAK &&
-    (primary === INTEREST_TAGS.LOGIC_SYSTEMS || primary === INTEREST_TAGS.HARDWARE_TINKERING)
-  ) {
-    reasoning.push("fallback:polytechnic_via_weak_math_systems_interest");
-    return {
-      pathway_key: "POLYTECHNIC_HARDWARE_AI",
-      confidence: "hedged",
-      reasoning_tags: reasoning
-    };
-  }
-
-  // Final terminal fallback
-  reasoning.push("fallback:general_exploration");
-  return {
-    pathway_key: "GENERAL_EXPLORE",
-    confidence: "hedged",
-    reasoning_tags: reasoning
-  };
-}
-
-// Main pure function entry point
 export function getRoutingResult(snapshot) {
-  const reasoning = [];
+  if (!snapshot) {
+    throw new Error("Missing snapshot state for routing");
+  }
 
-  // Gate 0: Polytechnic short-circuit
+  // 1. Explicit Polytechnic Gate (Highest Priority)
   if (snapshot.path_signal === PATH_SIGNAL.POLYTECHNIC_CURIOUS) {
-    return routeToPolytechnic(snapshot, reasoning);
-  }
-
-  // Gate 1: Math comfort filters candidate streams
-  let candidates = [];
-  let confidence = (snapshot.completeness === "full") ? "high" : "hedged";
-
-  switch (snapshot.math_comfort) {
-    case MATH_COMFORT.STRONG:
-      candidates = ["PCM", "PCB"];
-      reasoning.push("math:strong_filters_to_stem");
-      break;
-    case MATH_COMFORT.AVERAGE:
-      candidates = ["PCM", "PCB", "COMMERCE"];
-      reasoning.push("math:average_retains_applied_and_stem");
-      break;
-    case MATH_COMFORT.WEAK:
-      candidates = ["COMMERCE", "ARTS"];
-      reasoning.push("math:weak_filters_to_applied_and_humanities");
-      break;
-    case MATH_COMFORT.UNTESTED:
-    default:
-      candidates = ["PCM", "PCB", "COMMERCE", "ARTS"];
-      confidence = "hedged";
-      reasoning.push("math:untested_opens_all_candidates_hedged");
-      break;
-  }
-
-  // Gate 2: Interest Resolution
-  const primaryInterest = snapshot.top_interests[0];
-  const secondaryInterest = snapshot.top_interests[1];
-  const matchedStream = INTEREST_STREAM_MAP[primaryInterest];
-
-  if (!matchedStream || !candidates.includes(matchedStream)) {
-    return handleGate2Conflict(snapshot, confidence, reasoning);
-  }
-
-  // Gate 2b: Override Check (Strong Math + People/Writing Interest Fork)
-  const isHumanitiesInterest = (tag) => 
-    tag === INTEREST_TAGS.PEOPLE_FACING || tag === INTEREST_TAGS.WRITING_COMMUNICATION;
-
-  if (
-    snapshot.math_comfort === MATH_COMFORT.STRONG && 
-    (isHumanitiesInterest(primaryInterest) || isHumanitiesInterest(secondaryInterest))
-  ) {
-    reasoning.push("gate2b:strong_math_humanities_fork");
     return {
-      pathway_key: "PCM_CORE_AI",
-      secondary_pathway_key: "ARTS_AI_ETHICS",
-      confidence: confidence,
-      reasoning_tags: reasoning
+      pathway_key: PATHWAY_KEYS.POLYTECHNIC_DIPLOMA,
+      confidence: "high",
+      reasoning_tags: ["polytechnic:direct_interest"]
     };
   }
 
-  // Gate 3: Geo/Budget Tier resolution & tag enrichment
-  const basePathway = mapStreamToPathway(matchedStream, primaryInterest);
-  reasoning.push(`stream_matched:${matchedStream}`);
-  
-  if (snapshot.geo_budget_tier) {
-    reasoning.push(`geo_budget:${snapshot.geo_budget_tier}`);
+  // 2. Medical / Biology Gates (BiPC & PCMB)
+  const hasBiology = snapshot.top_interests && snapshot.top_interests.some(t =>
+    [INTEREST_TAGS.HEALTH_MEDICINE, INTEREST_TAGS.LIVING_SYSTEMS].includes(t)
+  );
+  if (hasBiology) {
+    if (snapshot.math_comfort === MATH_COMFORT.STRONG) {
+      return {
+        pathway_key: PATHWAY_KEYS.PCMB_HYBRID,
+        confidence: "high",
+        reasoning_tags: ["pcmb:strong_math_plus_biology"]
+      };
+    }
+    return {
+      pathway_key: PATHWAY_KEYS.BIPC_MEDICINE,
+      confidence: snapshot.math_comfort === MATH_COMFORT.WEAK ? "high" : "hedged",
+      reasoning_tags: ["bipc:pure_medical_health_focus"]
+    };
+  }
+
+  // 3. Commerce & Arts Gates (MEC, CEC, HEC)
+  if (snapshot.top_interests && snapshot.top_interests.includes(INTEREST_TAGS.FINANCE_BUSINESS)) {
+    if (snapshot.math_comfort === MATH_COMFORT.STRONG || snapshot.math_comfort === MATH_COMFORT.AVERAGE) {
+      return {
+        pathway_key: PATHWAY_KEYS.MEC_COMMERCE_DATA,
+        confidence: "high",
+        reasoning_tags: ["mec:finance_with_math"]
+      };
+    }
+    return {
+      pathway_key: PATHWAY_KEYS.CEC_COMMERCE_MANAGEMENT,
+      confidence: "high",
+      reasoning_tags: ["cec:finance_without_calculus"]
+    };
+  }
+
+  if (snapshot.top_interests && snapshot.top_interests.includes(INTEREST_TAGS.HUMAN_LAW_SOCIETY)) {
+    return {
+      pathway_key: PATHWAY_KEYS.HEC_HUMANITIES_ARTS,
+      confidence: "high",
+      reasoning_tags: ["hec:policy_and_law"]
+    };
+  }
+
+  // 4. MPC Core Engineering Gate
+  const hasTechInterests = snapshot.top_interests && snapshot.top_interests.some(t =>
+    [INTEREST_TAGS.LOGIC_SYSTEMS, INTEREST_TAGS.HARDWARE_TINKERING].includes(t)
+  );
+  if (snapshot.math_comfort === MATH_COMFORT.STRONG && hasTechInterests) {
+    return {
+      pathway_key: PATHWAY_KEYS.MPC_ENGINEERING,
+      confidence: "high",
+      reasoning_tags: ["mpc:strong_math_engineering_alignment"]
+    };
+  }
+
+  // 5. Hybrid / Interdisciplinary Gate
+  const hasDesignOrHumanities = snapshot.top_interests && snapshot.top_interests.some(t =>
+    [INTEREST_TAGS.CREATIVE_AI_MEDIA, INTEREST_TAGS.HUMAN_BEHAVIOR, INTEREST_TAGS.CREATIVE_DESIGN].includes(t)
+  );
+  if (hasDesignOrHumanities && snapshot.math_comfort !== MATH_COMFORT.STRONG) {
+    return {
+      pathway_key: PATHWAY_KEYS.AI_HUMANITIES_HYBRID,
+      confidence: "hedged",
+      reasoning_tags: ["hybrid:design_humanities_priority"]
+    };
+  }
+
+  // 6. Tier 3 Resource-Constrained Gate
+  if (snapshot.geo_budget === GEO_BUDGET_TIER.TIER2_3_CONSTRAINED && snapshot.math_comfort === MATH_COMFORT.WEAK) {
+    return {
+      pathway_key: PATHWAY_KEYS.VOCATIONAL_SELF_PACED,
+      confidence: "high",
+      reasoning_tags: ["vocational:cost_and_practical_focus"]
+    };
+  }
+
+  // 7. Core Accelerated vs Applied Fallbacks
+  if (snapshot.math_comfort === MATH_COMFORT.STRONG) {
+    return {
+      pathway_key: PATHWAY_KEYS.CS_CORE_ACCELERATED,
+      confidence: "high",
+      reasoning_tags: ["cs_core:strong_math_baseline"]
+    };
   }
 
   return {
-    pathway_key: basePathway,
-    confidence: confidence,
-    reasoning_tags: reasoning
+    pathway_key: PATHWAY_KEYS.CS_APPLIED_EXPLORATORY,
+    confidence: snapshot.math_comfort === MATH_COMFORT.AVERAGE ? "high" : "hedged",
+    reasoning_tags: ["cs_applied:foundational_support"]
+  };
+}
+
+export function calculateRoutingDecision(snapshot) {
+  const primaryResult = getRoutingResult(snapshot);
+
+  const isForkCandidate =
+    snapshot.math_comfort === MATH_COMFORT.STRONG &&
+    snapshot.top_interests &&
+    snapshot.top_interests.includes(INTEREST_TAGS.LOGIC_SYSTEMS) &&
+    (snapshot.top_interests.includes(INTEREST_TAGS.HEALTH_MEDICINE) ||
+     snapshot.top_interests.includes(INTEREST_TAGS.FINANCE_BUSINESS));
+
+  if (isForkCandidate) {
+    return {
+      isForked: true,
+      primary: primaryResult,
+      secondary: {
+        pathway_key: snapshot.top_interests.includes(INTEREST_TAGS.HEALTH_MEDICINE)
+          ? PATHWAY_KEYS.PCMB_HYBRID
+          : PATHWAY_KEYS.MEC_COMMERCE_DATA,
+        confidence: "high",
+        reasoning_tags: ["forked:dual_affinity"]
+      }
+    };
+  }
+
+  return {
+    isForked: false,
+    primary: primaryResult,
+    secondary: null
   };
 }
