@@ -1,49 +1,63 @@
 // js/taxonomy.js
 
-// 1. Math Comfort Level
-export const MATH_COMFORT = Object.freeze({
+export const MATH_COMFORT = {
   STRONG: "strong",
   AVERAGE: "average",
   WEAK: "weak",
   UNTESTED: "untested"
-});
+};
 
-// 2. Initial Post-10th Path Signal (Used in Gate 0 routing)
-export const PATH_SIGNAL = Object.freeze({
-  TRADITIONAL: "traditional",             // Standard 11th/12th
-  POLYTECHNIC_CURIOUS: "polytechnic",   // Considering 3-year diploma
-  UNDECIDED: "undecided"
-});
-
-// 3. Merged Geo & Budget Tier
-export const GEO_BUDGET_TIER = Object.freeze({
-  METRO_FLEXIBLE: "metro_flexible",
-  METRO_CONSTRAINED: "metro_constrained",
-  TIER2_3_CONSTRAINED: "tier2_3_constrained"
-});
-
-// 4. Board (Kept lightweight; informative for cutoffs)
-export const BOARD = Object.freeze({
+export const BOARD = {
   CBSE: "cbse",
   ICSE: "icse",
   STATE: "state",
   OTHER: "other"
-});
+};
 
-// 5. Interest Taxonomy (Max top-2 selection)
-export const INTEREST_TAGS = Object.freeze({
+export const GEO_BUDGET_TIER = {
+  METRO_FLEXIBLE: "metro_flexible",
+  METRO_CONSTRAINED: "metro_constrained",
+  TIER2_3_CONSTRAINED: "tier2_3_constrained"
+};
+
+export const PATH_SIGNAL = {
+  TRADITIONAL: "traditional",
+  POLYTECHNIC_CURIOUS: "polytechnic_curious",
+  UNDECIDED: "undecided"
+};
+
+export const INTEREST_TAGS = {
+  // Existing AI & Tech Tags
   LOGIC_SYSTEMS: "logic_systems",
-  DESIGN_VISUAL: "design_visual",
-  PEOPLE_FACING: "people_facing",
-  BUSINESS_STRATEGY: "business_strategy",
   HARDWARE_TINKERING: "hardware_tinkering",
-  WRITING_COMMUNICATION: "writing_communication",
-  BIOLOGY_HEALTH: "biology_health",
-  EXPERIMENTATION_SCIENCE: "experimentation_science"
-});
+  DATA_EXPLORATION: "data_exploration",
+  CREATIVE_AI_MEDIA: "creative_ai_media",
+  HUMAN_BEHAVIOR: "human_behavior",
+  WEB_MOBILE_DEV: "web_mobile_dev",
 
-// Derived arrays: exported directly for UI iteration (avoids Object.values calls in ui.js)
-export const INTEREST_TAGS_LIST = Object.freeze(Object.values(INTEREST_TAGS));
-export const MATH_COMFORT_LIST = Object.freeze(Object.values(MATH_COMFORT));
-export const PATH_SIGNAL_LIST = Object.freeze(Object.values(PATH_SIGNAL));
-export const GEO_BUDGET_LIST = Object.freeze(Object.values(GEO_BUDGET_TIER));
+  // New Streams: Medical, Commerce & Arts
+  HEALTH_MEDICINE: "health_medicine",
+  LIVING_SYSTEMS: "living_systems",
+  FINANCE_BUSINESS: "finance_business",
+  CREATIVE_DESIGN: "creative_design",
+  HUMAN_LAW_SOCIETY: "human_law_society"
+};
+
+export const INTEREST_TAGS_LIST = Object.values(INTEREST_TAGS);
+
+export const PATHWAY_KEYS = {
+  // Core AI & Tech Tracks
+  CS_CORE_ACCELERATED: "CS_CORE_ACCELERATED",
+  CS_APPLIED_EXPLORATORY: "CS_APPLIED_EXPLORATORY",
+  POLYTECHNIC_DIPLOMA: "POLYTECHNIC_DIPLOMA",
+  VOCATIONAL_SELF_PACED: "VOCATIONAL_SELF_PACED",
+  AI_HUMANITIES_HYBRID: "AI_HUMANITIES_HYBRID",
+
+  // Core Indian Streams
+  MPC_ENGINEERING: "MPC_ENGINEERING",
+  BIPC_MEDICINE: "BIPC_MEDICINE",
+  PCMB_HYBRID: "PCMB_HYBRID",
+  MEC_COMMERCE_DATA: "MEC_COMMERCE_DATA",
+  CEC_COMMERCE_MANAGEMENT: "CEC_COMMERCE_MANAGEMENT",
+  HEC_HUMANITIES_ARTS: "HEC_HUMANITIES_ARTS"
+};
