@@ -337,6 +337,195 @@ body {
   margin-top: 1rem;
 }
 
+/* Roadmap Tree & Pure CSS Spine Connectors */
+.roadmap-tree {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+}
+
+.roadmap-tree h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 1.2rem;
+}
+
+.roadmap-stage {
+  position: relative;
+  margin-bottom: 1.75rem;
+}
+
+.stage-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+/* Continuous vertical spine per stage */
+.stage-nodes {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-left: 1.25rem;
+}
+
+.stage-nodes::before {
+  content: "";
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.25rem;
+  width: 2px;
+  background: #cbd5e1;
+}
+
+/* Node layout & status variables */
+.roadmap-node {
+  --status-color: #64748b;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-left: 3.5px solid var(--status-color);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Horizontal branch connector connecting node to vertical spine */
+.roadmap-node::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -1rem;
+  width: 1rem;
+  height: 2px;
+  background: #cbd5e1;
+  transform: translateY(-50%);
+}
+
+/* Semantic Status Palette */
+.roadmap-node[data-status="mandatory"] {
+  --status-color: #ef4444;
+}
+
+.roadmap-node[data-status="recommended"] {
+  --status-color: var(--primary);
+}
+
+.roadmap-node[data-status="optional"] {
+  --status-color: #94a3b8;
+  border-left-style: dashed;
+}
+
+/* Completed Interaction State */
+.roadmap-node.is-completed {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  border-left-color: #22c55e;
+}
+
+.roadmap-node.is-completed .node-trigger {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+.node-trigger {
+  background: none;
+  border: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  text-align: left;
+  flex-grow: 1;
+  padding: 0;
+}
+
+.node-trigger:hover {
+  color: var(--primary);
+}
+
+.status-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+.status-pill.mandatory { background: #fee2e2; color: #991b1b; }
+.status-pill.recommended { background: #e0e7ff; color: #3730a3; }
+.status-pill.optional { background: #f1f5f9; color: #475569; }
+
+.node-check {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #10b981;
+  cursor: pointer;
+}
+
+/* Modal & Backdrop */
+.roadmap-modal {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 460px;
+  width: calc(100% - 2rem);
+  margin: auto;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  background: #ffffff;
+}
+
+.roadmap-modal::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.modal-desc {
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.modal-links a {
+  color: var(--primary);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
 /* Print CSS */
 /* ==========================================================
    Print / PDF Export Rules
@@ -444,6 +633,32 @@ body {
   .pathway-block h3,
   .pathway-block strong,
   .pathway-block li {
+    color: #000000 !important;
+  }
+
+  /* 4. Roadmap and Modal Print Rules */
+  #roadmap-modal,
+  dialog {
+    display: none !important;
+  }
+
+  .roadmap-node {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: 1px solid #94a3b8 !important;
+    border-left: 4px solid #000000 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  .stage-nodes::before,
+  .roadmap-node::before {
+    background: #000000 !important;
+  }
+
+  .status-pill {
+    background: transparent !important;
+    border: 1px solid #000000 !important;
     color: #000000 !important;
   }
 }
