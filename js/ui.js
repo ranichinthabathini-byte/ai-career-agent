@@ -117,6 +117,13 @@ function updateProgress() {
   }
 }
 
+function isStepValid(card) {
+  if (card.type === "single") {
+    return Boolean(state[card.field]);
+  }
+  return Array.isArray(state[card.field]) && state[card.field].length > 0;
+}
+
 function renderCard(index) {
   if (!container) return;
   updateProgress();
@@ -193,60 +200,81 @@ function renderCard(index) {
   }
 }
 
-function isStepValid(card) {
-  if (card.type === "single") {
-    return Boolean(state[card.field]);
+// --- Roadmap Local Storage & Modal Helpers ---
+
+function getCompletedNodes(pathwayKey) {
+  try {
+    const raw = localStorage.getItem(`roadmap_${pathwayKey}`);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch (e) {
+    return new Set();
   }
-  return Array.isArray(state[card.field]) && state[card.field].length > 0;
 }
 
-function showResults() {
-  updateProgress();
-  const decision = calculateRoutingDecision(state);
-  const primaryPath = careerContent[decision.primary.pathway_key];
-  const secondaryPath = decision.secondary ? careerContent[decision.secondary.pathway_key] : null;
+function toggleNodeCompletion(pathwayKey, nodeId, element) {
+  const completed = getCompletedNodes(pathwayKey);
+  if (completed.has(nodeId)) {
+    completed.delete(nodeId);
+    element.classList.remove("is-completed");
+  } else {
+    completed.add(nodeId);
+    element.classList.add("is-completed");
+  }
+  localStorage.setItem(`roadmap_${pathwayKey}`, JSON.stringify([...completed]));
+}
 
-  container.innerHTML = `
-    <div class="result-card ${decision.isForked ? 'result-card--forked' : ''}">
-      <h2>Your Recommended Pathway</h2>
-      <p class="hint">Customized based on your analytical profile and academic interests.</p>
+function openNodeModal(node) {
+  const modal = document.getElementById("roadmap-modal");
+  const title = document.getElementById("modal-node-title");
+  const desc = document.getElementById("modal-node-desc");
+  const links = document.getElementById("modal-node-links");
 
-      ${decision.primary.confidence === "hedged" ? `
-        <div class="hedge-banner">
-          ⚠️ <strong>Flexible Assessment:</strong> Several viable pathways match your profile. Focus on building core foundational strength during your first year.
+  if (!modal) return;
+
+  title.textContent = node.label;
+  desc.textContent = node.description || "No further description provided.";
+
+  if (node.links && node.links.length > 0) {
+    links.innerHTML = `<strong>Resources:</strong><ul>` +
+      node.links.map(url => `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></li>`).join("") +
+      `</ul>`;
+  } else {
+    links.innerHTML = "";
+  }
+
+  modal.showModal();
+}
+
+function renderRoadmap(pathwayKey, pathwayData) {
+  if (!pathwayData || !pathwayData.roadmap || !pathwayData.roadmap.stages) return "";
+
+  const completed = getCompletedNodes(pathwayKey);
+
+  return `
+    <div class="roadmap-tree">
+      <h4>Interactive Learning Roadmap</h4>
+      ${pathwayData.roadmap.stages.map(stage => `
+        <div class="roadmap-stage" data-stage-id="${stage.stage_id}">
+          <div class="stage-label">${stage.label}</div>
+          <div class="stage-nodes">
+            ${stage.nodes.map(node => {
+              const isDone = completed.has(node.id);
+              return `
+                <div class="roadmap-node ${isDone ? 'is-completed' : ''}" data-node-id="${node.id}" data-pathway="${pathwayKey}">
+                  <input type="checkbox" class="node-check" ${isDone ? 'checked' : ''} aria-label="Mark completed" />
+                  <button type="button" class="node-trigger">${node.label}</button>
+                  <span class="status-pill ${node.status}">${node.status}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
         </div>
-      ` : ""}
-
-      ${decision.isForked ? `
-        <div class="fork-explainer">
-          ⚖️ <strong>Dual Alignment:</strong> Your interests bridge two high-growth sectors. Compare these pathways below.
-        </div>
-      ` : ""}
-
-      <div class="fork-container">
-        ${renderPathwayBlock(primaryPath, "Primary Match")}
-        ${secondaryPath ? renderPathwayBlock(secondaryPath, "Alternative / Secondary Track", true) : ""}
-      </div>
-
-      <div class="nav-row result-actions">
-        <button type="button" class="btn-secondary" id="btn-restart">↻ Start Over</button>
-        <button type="button" class="btn-primary" id="save-pdf-btn">🖨️ Print / Save as PDF</button>
-      </div>
+      `).join("")}
     </div>
   `;
-
-  document.getElementById("btn-restart")?.addEventListener("click", () => {
-    resetState();
-    currentIndex = 0;
-    renderCard(0);
-  });
-
-  document.getElementById("save-pdf-btn")?.addEventListener("click", () => {
-    window.print();
-  });
 }
 
-function renderPathwayBlock(path, badgeLabel, isSecondary = false) {
+function renderPathwayBlock(path, badgeLabel, isSecondary = false, pathwayKey = "") {
   if (!path) return `<div class="pathway-block"><p>Pathway details unavailable.</p></div>`;
 
   return `
@@ -275,8 +303,95 @@ function renderPathwayBlock(path, badgeLabel, isSecondary = false) {
           ${(path.freeResources || []).map(item => `<li>${item}</li>`).join("")}
         </ul>
       </section>
+
+      ${pathwayKey ? renderRoadmap(pathwayKey, path) : ""}
     </div>
   `;
+}
+
+function showResults() {
+  updateProgress();
+  const decision = calculateRoutingDecision(state);
+  const primaryKey = decision.primary.pathway_key;
+  const secondaryKey = decision.secondary ? decision.secondary.pathway_key : null;
+
+  const primaryPath = careerContent[primaryKey];
+  const secondaryPath = secondaryKey ? careerContent[secondaryKey] : null;
+
+  container.innerHTML = `
+    <div class="result-card ${decision.isForked ? 'result-card--forked' : ''}">
+      <h2>Your Recommended Pathway</h2>
+      <p class="hint">Customized based on your analytical profile and academic interests.</p>
+
+      ${decision.primary.confidence === "hedged" ? `
+        <div class="hedge-banner">
+          ⚠️ <strong>Flexible Assessment:</strong> Several viable pathways match your profile. Focus on building core foundational strength during your first year.
+        </div>
+      ` : ""}
+
+      ${decision.isForked ? `
+        <div class="fork-explainer">
+          ⚖️ <strong>Dual Alignment:</strong> Your interests bridge two high-growth sectors. Compare these pathways below.
+        </div>
+      ` : ""}
+
+      <div class="fork-container">
+        ${renderPathwayBlock(primaryPath, "Primary Match", false, primaryKey)}
+        ${secondaryPath ? renderPathwayBlock(secondaryPath, "Alternative / Secondary Track", true, secondaryKey) : ""}
+      </div>
+
+      <div class="nav-row result-actions">
+        <button type="button" class="btn-secondary" id="btn-restart">↻ Start Over</button>
+        <button type="button" class="btn-primary" id="save-pdf-btn">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+  `;
+
+  // Attach modal close handlers once modal triggers exist
+  document.getElementById("modal-close-btn")?.addEventListener("click", () => {
+    document.getElementById("roadmap-modal")?.close();
+  });
+
+  const modalEl = document.getElementById("roadmap-modal");
+  modalEl?.addEventListener("click", (e) => {
+    if (e.target === modalEl) modalEl.close();
+  });
+
+  // Build node lookup map for modal preview
+  const nodeLookup = new Map();
+  [primaryPath, secondaryPath].forEach(pathObj => {
+    pathObj?.roadmap?.stages?.forEach(stage => {
+      stage.nodes?.forEach(node => nodeLookup.set(node.id, node));
+    });
+  });
+
+  // Attach interactive node events (checkbox toggle & modal trigger)
+  container.querySelectorAll(".roadmap-node").forEach(nodeEl => {
+    const nodeId = nodeEl.getAttribute("data-node-id");
+    const nodePathway = nodeEl.getAttribute("data-pathway");
+    const check = nodeEl.querySelector(".node-check");
+    const trigger = nodeEl.querySelector(".node-trigger");
+
+    check?.addEventListener("change", (e) => {
+      e.stopPropagation();
+      toggleNodeCompletion(nodePathway, nodeId, nodeEl);
+    });
+
+    trigger?.addEventListener("click", () => {
+      const nodeData = nodeLookup.get(nodeId);
+      if (nodeData) openNodeModal(nodeData);
+    });
+  });
+
+  document.getElementById("btn-restart")?.addEventListener("click", () => {
+    resetState();
+    currentIndex = 0;
+    renderCard(0);
+  });
+
+  document.getElementById("save-pdf-btn")?.addEventListener("click", () => {
+    window.print();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", init);
