@@ -56,6 +56,16 @@ export function getRoutingResult(snapshot) {
     };
   }
 
+  // Dedicated Arts, Design & Visual Media routing
+  if (snapshot.top_interests && snapshot.top_interests.includes(INTEREST_TAGS.CREATIVE_DESIGN)) {
+    return {
+      pathway_key: PATHWAY_KEYS.ARTS_DESIGN_CREATIVE,
+      confidence: "high",
+      reasoning_tags: ["arts:design_and_visual_media"]
+    };
+  }
+
+  // Humanities, Policy & Law routing (HEC)
   if (snapshot.top_interests && snapshot.top_interests.includes(INTEREST_TAGS.HUMAN_LAW_SOCIETY)) {
     return {
       pathway_key: PATHWAY_KEYS.HEC_HUMANITIES_ARTS,

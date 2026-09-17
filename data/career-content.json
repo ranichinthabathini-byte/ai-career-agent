@@ -182,6 +182,34 @@
         "PRS Legislative Research (Indian Constitution & Policy)"
       ]
     },
+    "ARTS_DESIGN_CREATIVE": {
+      "title": "Arts, Design & Creative Technologies Track",
+      "stream": "Higher Secondary / 11th & 12th Arts, Humanities, or any Stream with Design Portfolio",
+      "summary": "Dedicated creative pathway focusing on industrial design, UI/UX interaction systems, spatial planning, fashion, and digital visual entertainment. While Council of Architecture (CoA) mandates Math & Physics for structural B.Arch, all B.Des Spatial, Interior, and Product Design programs are 100% open to Arts graduates.",
+      "highSchoolFocus": [
+        "Visual Arts, Freehand Sketching & Perspective Drawing",
+        "Design Thinking, Ergonomics & Human-Centered Problem Solving",
+        "Portfolio development (digital assets, physical models, case studies)",
+        "Aptitude preparation: General observation, lateral thinking & spatial reasoning"
+      ],
+      "entranceExams": [
+        "National Design Entrances: UCEED (IITs — open to all streams), NID-DAT (National Institute of Design Prelims & Mains)",
+        "Fashion & Lifestyle: NIFT Entrance Exam (GAT + CAT + Situation Test), FDDI AIST",
+        "Fine Arts & Spatial: JNAFAU FADEE (Telangana & AP Fine Arts Entrance), Andhra University BFA Entrance",
+        "Private Design Schools: SEAT (Srishti Manipal), CEPT Design Aptitude Test"
+      ],
+      "undergradDegrees": [
+        "B.Des in UI/UX Design, Interaction Design & Digital Product Design",
+        "B.Des in Interior & Spatial Experience Design",
+        "B.Des in Fashion Design, Textile Design & Lifestyle Accessories",
+        "B.F.A. / B.Sc in Animation, VFX, Game Art & Concept Illustration"
+      ],
+      "freeResources": [
+        "UCEED / NID Official Past Year Question Papers",
+        "Interaction Design Foundation Open Guides",
+        "Blender 3D Open Source Documentation & Tutorials"
+      ]
+    },
     "POLYTECHNIC_DIPLOMA": {
       "title": "Polytechnic Diploma in Engineering",
       "stream": "3-Year Technical Diploma (Post-10th)",
