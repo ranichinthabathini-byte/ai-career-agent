@@ -21,23 +21,23 @@
       ]
     },
     "CS_APPLIED_EXPLORATORY": {
-      "title": "Applied Software & Practical Tech",
-      "stream": "Intermediate / 11th & 12th MPC or State Board",
-      "summary": "Hands-on software development track emphasizing real-world projects, modern web stacks, and practical application building.",
+      "title": "MPC Stream — State Board / Applied Tech Track",
+      "stream": "Intermediate (11th & 12th) MPC",
+      "summary": "Standard Intermediate MPC track balancing Board exams with State engineering entrances, suitable for pursuing BCA, B.Sc Computer Science, or B.Tech in IT.",
       "highSchoolFocus": [
-        "Applied Mathematics and practical computer science electives",
-        "Front-end web development (HTML, CSS, JavaScript)",
-        "Open-source collaboration and project building"
+        "Maths (Algebra, Coordinate Geometry, Differential & Integral Calculus)",
+        "Intermediate Physics & Chemistry for State CETs (EAPCET / KCET)",
+        "Board examination scoring (IPE) paired with fundamental aptitude"
       ],
       "undergradDegrees": [
-        "B.Tech in Information Technology",
         "BCA (Bachelor of Computer Applications)",
-        "B.Sc in Computer Science or Software Development"
+        "B.Tech in Information Technology / Computer Science",
+        "B.Sc in Computer Science / Data Science"
       ],
       "freeResources": [
-        "The Odin Project (Full Stack Curriculum)",
-        "freeCodeCamp Responsive Web Design & JavaScript",
-        "MDN Web Docs"
+        "Telugu Academy / State Board Textbooks",
+        "Khan Academy (Calculus & Coordinate Geometry)",
+        "CS50x: Introduction to Computer Science (Harvard / edX)"
       ]
     },
     "POLYTECHNIC_DIPLOMA": {
@@ -132,10 +132,29 @@
         "B.Sc Nursing, Biotechnology, or Allied Health Sciences"
       ],
       "freeResources": [
-        "NCERT Exemplar Solutions",
-        "Armando Hasudungan Biology Diagrams",
-        "Khan Academy Pre-Med modules"
-      ]
+        "Khan Academy (Advanced Calculus & Physics)",
+        "MIT OpenCourseWare (Single Variable Calculus)",
+        "NPTEL IIT Foundation Courses"
+      ],
+      "roadmap": {
+        "stages": [
+          {
+            "stage_id": "foundations_11",
+            "label": "Foundations (Class 11)",
+            "nodes": [
+              {
+                "id": "calc_limits_diff",
+                "label": "Differential Calculus",
+                "status": "mandatory",
+                "description": "Functions, limits, and core derivative techniques for mechanics.",
+                "links": [
+                  "https://www.khanacademy.org/math/calculus-1"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     "PCMB_HYBRID": {
       "title": "PCMB (Physics, Chemistry, Maths, Biology) — Computational Biology Track",
