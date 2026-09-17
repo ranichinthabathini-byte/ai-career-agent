@@ -153,29 +153,33 @@
       ]
     },
     "HEC_HUMANITIES_ARTS": {
-      "title": "HEC Stream (History, Economics, Civics)",
-      "stream": "Intermediate (11th & 12th) HEC",
-      "summary": "The definitive foundation for constitutional law, public administration, national civil services (UPSC/APPSC), and design disciplines.",
+      "title": "HEC & Creative Arts Stream (History, Economics, Civics / Design & Behavioral Track)",
+      "stream": "Intermediate (11th & 12th) HEC / Arts",
+      "summary": "The premier launchpad for Design, Behavioral Sciences (Psychology), Constitutional Law, Civil Services, and Digital Media. Note: While CoA mandates PCM for structural B.Arch, all B.Des Spatial/Interior/Product Design degrees are 100% open to Arts graduates.",
       "highSchoolFocus": [
-        "History: Ancient, Medieval, Modern Indian & World History",
+        "History: Ancient, Medieval, Modern Indian & World Civilizations",
         "Civics: Constitution of India, Political Theory & Human Rights",
-        "Economics: Socio-economic planning, rural economics & public finance"
+        "Economics: Micro/Macroeconomics & Indian Economic Planning",
+        "Creative Portfolio Development: Sketching, Spatial Perspective & Lateral Thinking"
       ],
       "entranceExams": [
-        "Law Entrances: AP LAWCET / TS LAWCET (5-Year Law), CLAT-UG",
-        "Central Universities: CUET-UG (Humanities, Social Sciences)",
-        "Design & Media: UCEED, NID-DAT, NIFT, IHM-JEE (Hotel Management)",
-        "State Degree Portals: AP OAMDC / TS DOST (Direct degree counseling)"
+        "Top Design Entrances: UCEED (IITs - Open to Arts), NID-DAT (B.Des), NIFT (Fashion/Textile/Accessory)",
+        "Fine Arts & Animation: JNAFAU FADEE (TS/AP), BFA Entrance Tests",
+        "Law Entrances: AP LAWCET / TS LAWCET (5-Year B.A. LL.B), CLAT-UG, AILET",
+        "Central Universities (Psychology / Media): CUET-UG (DU, HCU, TISS, BHU for BA/B.Sc Psychology)",
+        "State Degree Portals: AP OAMDC / TS DOST (Direct degree counseling for BA Psychology/Journalism)"
       ],
       "undergradDegrees": [
-        "B.A. LL.B (5-Year Integrated National Law Degree)",
-        "B.A. (Honours) in Political Science, Public Administration, or History",
-        "B.Des (Interaction / Communication / Fashion Design)",
-        "B.A. in Journalism & Mass Communication"
+        "B.Des in UI/UX Design, Interior & Spatial Experience Design, or Product Design",
+        "B.A. / B.Sc in Psychology (Clinical, Cognitive, Counseling Psychology)",
+        "5-Year Integrated B.A. LL.B (Corporate, Criminal, or Cyber Law)",
+        "B.Des / B.Sc in Animation, VFX & Game Art",
+        "B.A. in Journalism, Film & Digital Mass Communication"
       ],
       "freeResources": [
-        "Khan Academy World & Modern History",
-        "PRS Legislative Research (Indian Acts & Policies)"
+        "UCEED & NID Previous Year Question Papers (Design Aptitude)",
+        "Khan Academy Psychology & World History modules",
+        "PRS Legislative Research (Indian Constitution & Policy)"
       ]
     },
     "POLYTECHNIC_DIPLOMA": {

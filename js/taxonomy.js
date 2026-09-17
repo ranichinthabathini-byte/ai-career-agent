@@ -62,30 +62,49 @@ export const PATHWAY_KEYS = {
   HEC_HUMANITIES_ARTS: "HEC_HUMANITIES_ARTS"
 };
 // Dynamic alignment insights for instant feedback on Step 3
+// Dynamic alignment insights for instant feedback on Step 3
 export const DOMAIN_ALIGNMENT_INSIGHTS = {
+  creative_design: {
+    match: (tags) => tags.includes(INTEREST_TAGS.CREATIVE_DESIGN),
+    title: "Design, Visual Arts & Creative Tech Alignment",
+    domains: "B.Des (UI/UX, Spatial/Interior, Product), Fashion Design, BFA (Animation & VFX)",
+    subjects: "Creative Aptitude, Spatial Visualization, Design Thinking (UCEED / NID-DAT / NIFT)"
+  },
+  humanities_psychology: {
+    match: (tags) => tags.includes(INTEREST_TAGS.HUMAN_LAW_SOCIETY) && tags.includes(INTEREST_TAGS.LIVING_SYSTEMS),
+    title: "Cognitive, Behavioral & Clinical Psychology Alignment",
+    domains: "B.A. / B.Sc Psychology, Cognitive Science, Behavioral Neurobiology",
+    subjects: "Human Development, Social Psychology, Cognitive Behavior, Research Methods"
+  },
+  law_policy: {
+    match: (tags) => tags.includes(INTEREST_TAGS.HUMAN_LAW_SOCIETY) && !tags.includes(INTEREST_TAGS.LIVING_SYSTEMS),
+    title: "Legal Studies, Governance & Policy Alignment",
+    domains: "5-Year Integrated B.A. LL.B (Corporate/Cyber Law), Public Policy, Civil Services (UPSC/State PSC)",
+    subjects: "Constitutional Law, Political Science, Legal Reasoning (AP/TS LAWCET, CLAT-UG)"
+  },
   data_systems: {
     match: (tags) => tags.includes(INTEREST_TAGS.LOGIC_SYSTEMS) && tags.includes(INTEREST_TAGS.DATA_EXPLORATION),
     title: "Computer Science & Data Science Alignment",
     domains: "CSE (Data Science / AI), Applied Analytics, Quantitative Systems",
-    subjects: "Advanced Algebra, Statistics & Probability, Discrete Mathematics"
+    subjects: "Algebra 1A/2A, Coordinate Geometry 1B, Statistics (AP/TG EAPCET, JEE Main)"
   },
   hardware_iot: {
     match: (tags) => tags.includes(INTEREST_TAGS.HARDWARE_TINKERING) && tags.includes(INTEREST_TAGS.LOGIC_SYSTEMS),
     title: "Electronics, Robotics & Embedded Tech Alignment",
     domains: "ECE (Electronics & Communication), IoT Engineering, Robotics & Mechatronics",
-    subjects: "Mechanics, Electromagnetism, Differential Calculus"
+    subjects: "Mechanics, Electromagnetism, Differential Calculus 1B (EAPCET, JEE)"
   },
   medical_clinical: {
     match: (tags) => tags.includes(INTEREST_TAGS.HEALTH_MEDICINE) || tags.includes(INTEREST_TAGS.LIVING_SYSTEMS),
-    title: "Healthcare & Biological Sciences Alignment",
-    domains: "MBBS, B.Pharmacy, Biomedical Engineering, Biotechnology",
-    subjects: "Human Physiology, Organic Chemistry, Genetics"
+    title: "Medical, Pharmacy & Allied Health Sciences Alignment",
+    domains: "MBBS, B.Pharmacy, Pharma.D, B.Sc Agriculture, Veterinary Science",
+    subjects: "Botany (Plant Anatomy/Genetics), Zoology (Human Physiology), Organic Chemistry (NEET, EAPCET Agri)"
   },
   fintech_business: {
     match: (tags) => tags.includes(INTEREST_TAGS.FINANCE_BUSINESS),
     title: "Commerce & FinTech Analytics Alignment",
     domains: "B.Com Analytics, FinTech Systems, Financial Engineering, CA / CFA",
-    subjects: "Applied Business Math, Macroeconomics, Accounting Logic"
+    subjects: "Commercial Math, Accountancy, Macroeconomics (CA Foundation, IPMAT)"
   },
   creative_design: {
     match: (tags) => tags.includes(INTEREST_TAGS.CREATIVE_DESIGN),
