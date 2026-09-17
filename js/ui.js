@@ -146,6 +146,7 @@ function renderCard(index) {
   updateProgress();
 
   const currentCard = CARD_SEQUENCE[index];
+  const isLast = index === CARD_SEQUENCE.length - 1;
   const liveInsight = currentCard.id === "top_interests" ? getLiveInterestInsight(state.top_interests) : null;
 
   container.innerHTML = `
