@@ -4,7 +4,8 @@ import {
   GEO_BUDGET_TIER,
   PATH_SIGNAL,
   INTEREST_TAGS,
-  PATHWAY_KEYS
+  PATHWAY_KEYS,
+  DOMAIN_ALIGNMENT_INSIGHTS
 } from "./taxonomy.js";
 import { state, updateField, toggleInterest, resetState } from "./state.js";
 import { calculateRoutingDecision } from "./routing.js";
@@ -123,13 +124,69 @@ function isStepValid(card) {
   }
   return Array.isArray(state[card.field]) && state[card.field].length > 0;
 }
+function getLiveInterestInsight(selectedTags) {
+  if (!selectedTags || selectedTags.length === 0) return null;
+
+  for (const key of Object.keys(DOMAIN_ALIGNMENT_INSIGHTS)) {
+    const rule = DOMAIN_ALIGNMENT_INSIGHTS[key];
+    if (rule.match(selectedTags)) {
+      return rule;
+    }
+  }
+
+  return {
+    title: "Interdisciplinary Exploration",
+    domains: "Applied Engineering / Technology electives matching your focus",
+    subjects: "Core analytical problem solving and foundations"
+  };
+}
 
 function renderCard(index) {
   if (!container) return;
   updateProgress();
 
   const currentCard = CARD_SEQUENCE[index];
-  const isLast = index === CARD_SEQUENCE.length - 1;
+  const liveInsight = currentCard.id === "top_interests" ? getLiveInterestInsight(state.top_interests) : null;
+
+  container.innerHTML = `
+    <div class="intake-card">
+      <h2>${currentCard.title}</h2>
+      <p class="hint">${currentCard.hint}</p>
+
+      <div class="option-group ${currentCard.type === 'multi' ? 'tag-grid' : ''}" id="option-list">
+        ${currentCard.options.map(opt => {
+          let isSelected = false;
+          if (currentCard.type === "single") {
+            isSelected = state[currentCard.field] === opt.value;
+          } else {
+            isSelected = state[currentCard.field]?.includes(opt.value);
+          }
+          return `
+            <button type="button" class="btn-option ${isSelected ? 'selected' : ''}" data-value="${opt.value}">
+              <span>${opt.label}</span>
+              ${isSelected && currentCard.type === 'multi' ? '<span class="tag-badge">Selected</span>' : ''}
+            </button>
+          `;
+        }).join("")}
+      </div>
+
+      ${liveInsight ? `
+        <div class="interest-preview-box">
+          <div class="preview-badge">⚡ Live Insight</div>
+          <h4>${liveInsight.title}</h4>
+          <p><strong>Suggested Branches & Fields:</strong> ${liveInsight.domains}</p>
+          <p><strong>Key Subjects to Focus On:</strong> ${liveInsight.subjects}</p>
+        </div>
+      ` : ""}
+
+      <div class="nav-row">
+        ${index > 0 ? `<button type="button" class="btn-secondary" id="btn-back">← Back</button>` : `<div></div>`}
+        <button type="button" class="btn-primary" id="btn-next" ${isStepValid(currentCard) ? "" : "disabled"}>
+          ${isLast ? "Generate Roadmap →" : "Next →"}
+        </button>
+      </div>
+    </div>
+  `;
 
   container.innerHTML = `
     <div class="intake-card">
