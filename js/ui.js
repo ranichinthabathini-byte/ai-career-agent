@@ -124,8 +124,9 @@ function isStepValid(card) {
   }
   return Array.isArray(state[card.field]) && state[card.field].length > 0;
 }
+
 function getLiveInterestInsight(selectedTags) {
-  if (!selectedTags || selectedTags.length === 0) return null;
+  if (!selectedTags || selectedTags.length === 0 || !DOMAIN_ALIGNMENT_INSIGHTS) return null;
 
   for (const key of Object.keys(DOMAIN_ALIGNMENT_INSIGHTS)) {
     const rule = DOMAIN_ALIGNMENT_INSIGHTS[key];
@@ -179,37 +180,6 @@ function renderCard(index) {
           <p><strong>Key Subjects to Focus On:</strong> ${liveInsight.subjects}</p>
         </div>
       ` : ""}
-
-      <div class="nav-row">
-        ${index > 0 ? `<button type="button" class="btn-secondary" id="btn-back">← Back</button>` : `<div></div>`}
-        <button type="button" class="btn-primary" id="btn-next" ${isStepValid(currentCard) ? "" : "disabled"}>
-          ${isLast ? "Generate Roadmap →" : "Next →"}
-        </button>
-      </div>
-    </div>
-  `;
-
-  container.innerHTML = `
-    <div class="intake-card">
-      <h2>${currentCard.title}</h2>
-      <p class="hint">${currentCard.hint}</p>
-
-      <div class="option-group ${currentCard.type === 'multi' ? 'tag-grid' : ''}" id="option-list">
-        ${currentCard.options.map(opt => {
-          let isSelected = false;
-          if (currentCard.type === "single") {
-            isSelected = state[currentCard.field] === opt.value;
-          } else {
-            isSelected = state[currentCard.field]?.includes(opt.value);
-          }
-          return `
-            <button type="button" class="btn-option ${isSelected ? 'selected' : ''}" data-value="${opt.value}">
-              <span>${opt.label}</span>
-              ${isSelected && currentCard.type === 'multi' ? '<span class="tag-badge">Selected</span>' : ''}
-            </button>
-          `;
-        }).join("")}
-      </div>
 
       <div class="nav-row">
         ${index > 0 ? `<button type="button" class="btn-secondary" id="btn-back">← Back</button>` : `<div></div>`}
