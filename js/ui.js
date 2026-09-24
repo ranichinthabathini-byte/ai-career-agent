@@ -326,24 +326,37 @@ function renderCard(index) {
     });
   }
 }
-
 function evaluateScoreBracket(exam, score) {
   if (score === null || isNaN(score) || !exam?.tiers) return null;
 
+  // Rank-based (lower number is better)
   if (exam.unit.toLowerCase().includes("rank")) {
     for (const tier of exam.tiers) {
       if (score <= tier.maxRank) {
-        return { tier: tier.label, range: tier.range };
+        return { tier: tier.label, range: tier.range, isCritical: false };
       }
     }
+    // If the rank exceeds all tiers or exceeds failThreshold
+    return {
+      tier: "Outside Competitive Rank Tiers (Borderline / High Rank)",
+      range: `Above ${exam.failThreshold || 'Standard Cutoff'}`,
+      isCritical: true
+    };
   }
 
+  // Score/Percentile-based (higher number is better)
   if (exam.unit.toLowerCase().includes("percentile") || exam.unit.toLowerCase().includes("marks")) {
     for (const tier of exam.tiers) {
       if (score >= tier.minScore) {
-        return { tier: tier.label, range: tier.range };
+        return { tier: tier.label, range: tier.range, isCritical: false };
       }
     }
+    // If score is lower than the lowest tier / failThreshold
+    return {
+      tier: "Below Qualifying / Near Borderline Cutoff",
+      range: `Below ${exam.failThreshold || 'Passing Threshold'}`,
+      isCritical: true
+    };
   }
 
   return null;
@@ -366,6 +379,7 @@ function showFinalResults() {
       <h2>${path.title}</h2>
       <p class="hint">${path.summary}</p>
 
+      <!-- 1. Academic Subjects -->
       <section class="result-section">
         <strong>📚 Academic Subjects Taught:</strong>
         <ul>
@@ -373,6 +387,7 @@ function showFinalResults() {
         </ul>
       </section>
 
+      <!-- 2. Candidate Evaluation & Cutoff Ranges -->
       ${selectedExam ? `
         <section class="result-section" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
@@ -381,16 +396,24 @@ function showFinalResults() {
           </div>
 
           <p style="font-size: 0.84rem; color: #475569; margin-bottom: 0.85rem;">
-            <strong>Minimum Qualifying Requirement:</strong> ${selectedExam.qualifying}
+            <strong>Minimum Qualifying Standard:</strong> ${selectedExam.qualifying}
           </p>
 
-          ${evaluation ? `
-            <div style="background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
-              <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #047857; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">Estimated Placement Range:</span>
-              <div style="font-size: 1.05rem; font-weight: 700; color: #065f46;">${evaluation.tier}</div>
-              <span style="font-size: 0.82rem; color: #047857;">Based on your entered ${selectedExam.unit.toLowerCase()}: <strong>${userChoices.user_score}</strong></span>
-            </div>
-          ` : `
+          ${evaluation ? (
+            evaluation.isCritical ? `
+              <div style="background: #fff7ed; border: 1.5px solid #fdba74; border-radius: 10px; padding: 0.95rem 1.15rem; margin-bottom: 1rem;">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #c2410c; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">Status: Borderline / Low Score Range</span>
+                <div style="font-size: 1.02rem; font-weight: 700; color: #9a3412;">${evaluation.tier}</div>
+                <span style="font-size: 0.82rem; color: #c2410c;">Your score (${userChoices.user_score}) may have difficulty qualifying for competitive entrance quotas, but strong alternative options are available below.</span>
+              </div>
+            ` : `
+              <div style="background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #047857; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">Estimated Placement Range:</span>
+                <div style="font-size: 1.05rem; font-weight: 700; color: #065f46;">${evaluation.tier}</div>
+                <span style="font-size: 0.82rem; color: #047857;">Based on your entered ${selectedExam.unit.toLowerCase()}: <strong>${userChoices.user_score}</strong></span>
+              </div>
+            `
+          ) : `
             <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.84rem; color: #1e40af;">
               ℹ️ Enter your rank/score in the previous screen to highlight your specific placement bracket.
             </div>
@@ -403,6 +426,24 @@ function showFinalResults() {
                 <strong>${t.label}:</strong> ${t.range} ${evaluation && evaluation.tier === t.label ? '✔ (Your Range)' : ''}
               </li>
             `).join("")}
+          </ul>
+        </section>
+      ` : ""}
+
+      <!-- 3. Dynamic Safety Net Alternatives (Prominent when marks are low) -->
+      ${path.safetyNet ? `
+        <section class="result-section" style="${evaluation?.isCritical ? 'background: #f0fdf4; border: 2px solid #86efac;' : 'background: #f8fafc; border: 1.5px solid #cbd5e1;'} border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem;">
+            <span style="font-size: 1.15rem;">🌱</span>
+            <strong style="color: ${evaluation?.isCritical ? '#166534' : 'var(--text-main)'}; font-size: 0.98rem;">
+              ${evaluation?.isCritical ? 'High-Impact Alternatives Tailored for Your Score:' : path.safetyNet.title}
+            </strong>
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin: 0 0 0.65rem 0;">
+            ${evaluation?.isCritical ? 'Do not get discouraged by competitive cutoffs. These highly viable courses and career paths do not depend on entrance exam ranks:' : 'Alternative career and degree options available with flexible entry criteria:'}
+          </p>
+          <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.86rem; color: #1e293b; line-height: 1.6;">
+            ${path.safetyNet.recommendations.map(rec => `<li>${rec}</li>`).join("")}
           </ul>
         </section>
       ` : ""}
@@ -430,5 +471,3 @@ function showFinalResults() {
     window.print();
   });
 }
-
-document.addEventListener("DOMContentLoaded", init);
