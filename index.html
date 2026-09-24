@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Career Agent</title>
-  
+
   <!-- Modern Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -21,30 +21,13 @@
       <div class="badge-pill">Autonomous Guidance Engine</div>
       <h1>AI Career Agent</h1>
       <p class="subtitle">Turn what you enjoy today into high-impact tomorrow</p>
-      
-    <div class="progress-track">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>  
+
+      <div class="progress-track">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
     </header>
 
     <main id="card-container">
-      <!-- Cards render dynamically here -->
-    </main>
-  </div>
-
-  <!-- ui.js handles importing taxonomy, state, and routing internally -->
-  <script type="module" src="js/ui.js"></script>
-</body>
-</html> 
-<dialog id="roadmap-modal" class="roadmap-modal">
-  <div class="modal-header">
-    <h3 id="modal-node-title"></h3>
-    <button type="button" id="modal-close-btn" class="btn-close">✕</button>
-  </div>
-  <p id="modal-node-desc" class="modal-desc"></p>
-  <div id="modal-node-links" class="modal-links"></div>
-</dialog>
-<main id="card-container">
       <!-- Cards render dynamically here -->
     </main>
   </div>
@@ -59,7 +42,7 @@
     <div id="modal-node-links" class="modal-links"></div>
   </dialog>
 
-  <!-- ui.js handles importing taxonomy, state, and routing internally -->
-  <script type="module" src="js/ui.js"></script>
+  <!-- Cache buster ?v=4 forces the browser to load your newest script -->
+  <script type="module" src="js/ui.js?v=4"></script>
 </body>
 </html>
