@@ -1,4 +1,4 @@
-import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js";
+import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js?v=5";
 
 const STEPS = [
   {
