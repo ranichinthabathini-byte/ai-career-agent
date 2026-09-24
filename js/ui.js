@@ -1,10 +1,10 @@
-import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js?v=7";
+import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js?v=9";
 
 const CARDS = [
   {
     id: "board",
     title: "What is your current school board?",
-    hint: "", // HINT REMOVED HERE
+    hint: "",
     options: [
       { label: "State Board (BIEAP / TSBIE / SSC)", value: BOARD.STATE },
       { label: "CBSE (Central Board)", value: BOARD.CBSE },
@@ -150,7 +150,6 @@ function renderCard(index) {
   if (!container) return;
   updateProgress();
 
-  // Part 1 & Part 2: Board and Subject Interests
   if (index < 2) {
     const card = CARDS[index];
     container.innerHTML = `
@@ -197,7 +196,6 @@ function renderCard(index) {
     return;
   }
 
-  // Part 3: Stream Selection based on Subjects
   if (index === 2) {
     const dynamicOptions = STREAM_MAPPINGS[userChoices.subject_interest] || [];
 
@@ -251,7 +249,6 @@ function renderCard(index) {
     return;
   }
 
-  // Part 4: Exam Type and Score/Rank Input
   if (index === 3) {
     const pathwayData = careerContent[userChoices.chosen_pathway];
     const availableExams = pathwayData?.exams || [];
@@ -326,35 +323,32 @@ function renderCard(index) {
     });
   }
 }
+
 function evaluateScoreBracket(exam, score) {
   if (score === null || isNaN(score) || !exam?.tiers) return null;
 
-  // Rank-based (lower number is better)
   if (exam.unit.toLowerCase().includes("rank")) {
     for (const tier of exam.tiers) {
       if (score <= tier.maxRank) {
         return { tier: tier.label, range: tier.range, isCritical: false };
       }
     }
-    // If the rank exceeds all tiers or exceeds failThreshold
     return {
       tier: "Outside Competitive Rank Tiers (Borderline / High Rank)",
-      range: `Above ${exam.failThreshold || 'Standard Cutoff'}`,
+      range: `Above Standard Cutoff`,
       isCritical: true
     };
   }
 
-  // Score/Percentile-based (higher number is better)
   if (exam.unit.toLowerCase().includes("percentile") || exam.unit.toLowerCase().includes("marks")) {
     for (const tier of exam.tiers) {
       if (score >= tier.minScore) {
         return { tier: tier.label, range: tier.range, isCritical: false };
       }
     }
-    // If score is lower than the lowest tier / failThreshold
     return {
       tier: "Below Qualifying / Near Borderline Cutoff",
-      range: `Below ${exam.failThreshold || 'Passing Threshold'}`,
+      range: `Below Standard Passing Threshold`,
       isCritical: true
     };
   }
@@ -379,7 +373,6 @@ function showFinalResults() {
       <h2>${path.title}</h2>
       <p class="hint">${path.summary}</p>
 
-      <!-- 1. Academic Subjects -->
       <section class="result-section">
         <strong>📚 Academic Subjects Taught:</strong>
         <ul>
@@ -387,7 +380,6 @@ function showFinalResults() {
         </ul>
       </section>
 
-      <!-- 2. Candidate Evaluation & Cutoff Ranges -->
       ${selectedExam ? `
         <section class="result-section" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
@@ -396,7 +388,7 @@ function showFinalResults() {
           </div>
 
           <p style="font-size: 0.84rem; color: #475569; margin-bottom: 0.85rem;">
-            <strong>Minimum Qualifying Standard:</strong> ${selectedExam.qualifying}
+            <strong>Minimum Qualifying Requirement:</strong> ${selectedExam.qualifying}
           </p>
 
           ${evaluation ? (
@@ -430,7 +422,6 @@ function showFinalResults() {
         </section>
       ` : ""}
 
-      <!-- 3. Dynamic Safety Net Alternatives (Prominent when marks are low) -->
       ${path.safetyNet ? `
         <section class="result-section" style="${evaluation?.isCritical ? 'background: #f0fdf4; border: 2px solid #86efac;' : 'background: #f8fafc; border: 1.5px solid #cbd5e1;'} border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem;">
@@ -471,3 +462,5 @@ function showFinalResults() {
     window.print();
   });
 }
+
+document.addEventListener("DOMContentLoaded", init);
