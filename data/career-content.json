@@ -2,258 +2,241 @@
   "pathways": {
     "MPC_ENGINEERING": {
       "title": "MPC Stream (Mathematics, Physics, Chemistry)",
-      "stream": "Intermediate (11th & 12th) MPC",
-      "summary": "The premier gateway for engineering, architecture, physical sciences, and technical innovation across AP, TS, and national institutions.",
+      "stream": "Intermediate (11th & 12th) MPC / +2 Science",
+      "summary": "Gateway for engineering, applied computing, architecture, and mathematical sciences.",
       "highSchoolFocus": [
         "Maths 1A/2A: Functions, Matrices, Complex Numbers, Probability & Calculus",
-        "Maths 1B/2B: 2D/3D Coordinate Geometry, Differentiation & Integration",
+        "Maths 1B/2B: Coordinate Geometry, Differentiation & Integration",
         "Physics: Mechanics, Electromagnetism, Optics & Modern Physics",
-        "Chemistry: Physical, Inorganic & Organic Chemistry fundamentals"
+        "Chemistry: Physical, Inorganic & Organic Chemistry"
       ],
-      "entranceExams": [
-        "State CETs: AP EAPCET / TG EAPCET (Engineering Stream)",
-        "National Level: JEE Main & JEE Advanced (IITs, NITs, IIITs)",
-        "Deemed/Private Universities: BITSAT, VITEEE, SRMJEEE, MET",
-        "Defense & Others: UPSC NDA, NATA (Architecture Paper 2)"
-      ],
-      "undergradDegrees": [
-        "B.Tech / B.E. (Computer Science, AI/ML, Data Science, ECE, EEE)",
-        "B.Tech in Mechanical, Civil, Aerospace, or Robotics Engineering",
-        "B.Arch (Bachelor of Architecture)",
-        "B.Sc / BS in Data Science, Computing, or Applied Mathematics"
-      ],
-      "freeResources": [
-        "Telugu Academy / State Board Standard Textbooks",
-        "NPTEL IIT Foundation Courses",
-        "Khan Academy (Advanced Calculus & Physics)",
-        "CS50x: Introduction to Computer Science (Harvard / edX)"
-      ],
-      "roadmap": {
-        "stages": [
-          {
-            "stage_id": "foundations_11",
-            "label": "Foundations (Class 11 / Inter 1st Year)",
-            "nodes": [
-              {
-                "id": "calc_limits_diff",
-                "label": "Differential Calculus & Coordinate Geometry",
-                "status": "mandatory",
-                "description": "Functions, limits, and derivative techniques for mechanics and curves.",
-                "links": ["https://www.khanacademy.org/math/calculus-1"]
-              }
-            ]
-          }
-        ]
-      }
+      "exams": [
+        {
+          "id": "eapcet",
+          "name": "State EAPCET / EAMCET (Engineering)",
+          "unit": "Rank",
+          "qualifying": "Minimum 40/160 marks (25%) for General/BC. Ranked irrespective of marks for SC/ST.",
+          "tiers": [
+            { "label": "Tier-1 University Engineering Colleges", "range": "Rank 1 – 3,000", "maxRank": 3000 },
+            { "label": "Top Autonomous Institutions", "range": "Rank 3,001 – 10,000", "maxRank": 10000 },
+            { "label": "Reputed Affiliated Colleges", "range": "Rank 10,001 – 30,000", "maxRank": 30000 },
+            { "label": "Regional Private Institutions", "range": "Rank 30,001+", "maxRank": 999999 }
+          ]
+        },
+        {
+          "id": "jee_main",
+          "name": "JEE Main",
+          "unit": "Percentile",
+          "qualifying": "90 – 93+ Percentile (General), 75 – 79 Percentile (OBC/EWS), 50 – 55 Percentile (SC/ST).",
+          "tiers": [
+            { "label": "Top Tier National Institutes", "range": "98.5+ Percentile", "minScore": 98.5 },
+            { "label": "Mid-Tier National / Central Institutions", "range": "95.0 – 98.4 Percentile", "minScore": 95.0 },
+            { "label": "State / Institutional Quota Seats", "range": "90.0 – 94.9 Percentile", "minScore": 90.0 },
+            { "label": "Private Universities Accepting Score", "range": "Below 90.0 Percentile", "minScore": 0 }
+          ]
+        }
+      ]
     },
     "BIPC_MEDICINE": {
       "title": "BiPC Stream (Biology, Physics, Chemistry)",
-      "stream": "Intermediate (11th & 12th) BiPC",
-      "summary": "Targeted pathway for clinical healthcare, medical surgery, pharmaceuticals, agricultural sciences, and biotechnology research.",
+      "stream": "Intermediate (11th & 12th) BiPC / +2 Medical",
+      "summary": "Targeted pathway for clinical healthcare, pharmaceuticals, agricultural sciences, and life sciences.",
       "highSchoolFocus": [
         "Botany: Plant Physiology, Morphology, Diversity, and Genetics",
         "Zoology: Human Anatomy, Physiology, Animal Diversity, and Evolution",
-        "Physics & Chemistry: Same core syllabus as MPC with medical entrance weightage",
-        "Regular practical lab work and NCERT line-by-line mastery"
+        "Physics & Chemistry: Standard medical weightage curriculum"
       ],
-      "entranceExams": [
-        "National Level: NEET-UG (MBBS, BDS, AYUSH, BVSc)",
-        "State Level: AP EAPCET / TG EAPCET (Agriculture & Pharmacy Stream)",
-        "Central & Research: ICAR AIEEA (via CUET-UG), AIIMS B.Sc Nursing",
-        "Research Institutes: NEST / IISER Aptitude Test (IAT)"
-      ],
-      "undergradDegrees": [
-        "MBBS, BDS, BAMS, BHMS (Clinical Medicine & Surgery)",
-        "B.V.Sc & AH (Veterinary Science)",
-        "B.Sc (Hons) Agriculture, Horticulture, Forestry, Fishery Science",
-        "B.Pharmacy & Pharm.D (Doctor of Pharmacy)"
-      ],
-      "freeResources": [
-        "NCERT & Telugu Academy Biology Exemplars",
-        "Khan Academy AP Biology",
-        "Armando Hasudungan Medical Diagrams"
+      "exams": [
+        {
+          "id": "neet",
+          "name": "NEET-UG",
+          "unit": "Marks (out of 720)",
+          "qualifying": "50th percentile (~135-140 marks out of 720 for General).",
+          "tiers": [
+            { "label": "Top Government Medical Colleges", "range": "630 – 720 Marks", "minScore": 630 },
+            { "label": "State Government Medical Colleges", "range": "570 – 629 Marks", "minScore": 570 },
+            { "label": "Semi-Government / Top Private Medical Colleges", "range": "480 – 569 Marks", "minScore": 480 },
+            { "label": "Deemed / Private Dental & Allied Health Colleges", "range": "Qualifying – 479 Marks", "minScore": 135 }
+          ]
+        },
+        {
+          "id": "eapcet_agri",
+          "name": "State EAPCET / EAMCET (Agri & Pharmacy)",
+          "unit": "Rank",
+          "qualifying": "40/160 marks (25%) for General/BC.",
+          "tiers": [
+            { "label": "Top University Agricultural & Veterinary Programs", "range": "Rank 1 – 2,500", "maxRank": 2500 },
+            { "label": "Government Pharmacy & Allied Colleges", "range": "Rank 2,501 – 8,000", "maxRank": 8000 },
+            { "label": "Reputed Private Pharmacy Institutions", "range": "Rank 8,001 – 25,000", "maxRank": 25000 },
+            { "label": "Affiliated Regional Colleges", "range": "Rank 25,001+", "maxRank": 999999 }
+          ]
+        }
       ]
     },
-    "PCMB_HYBRID": {
-      "title": "PCMB Stream (Physics, Chemistry, Maths, Biology)",
-      "stream": "Intermediate / 11th & 12th PCMB",
-      "summary": "Interdisciplinary dual-math track bridging biological systems with computational modeling, bioinformatics, and biomedical engineering.",
+    "POLYTECHNIC_DIPLOMA": {
+      "title": "Polytechnic Diploma in Engineering",
+      "stream": "3-Year Technical Diploma (Post-10th Entry)",
+      "summary": "Laboratory-first technical diploma with direct lateral admission to 2nd-year engineering degrees.",
       "highSchoolFocus": [
-        "Higher Mathematics combined with Genetics and Cell Biology",
-        "Biophysics, Organic Reaction Mechanisms, and Physical Chemistry",
-        "Dual preparation managing both medical and technical problem solving"
+        "Applied Physics, Chemistry & Engineering Mathematics",
+        "Workshop technology, engineering drawing & coding fundamentals",
+        "Applied engineering labs"
       ],
-      "entranceExams": [
-        "Engineering Stream: AP/TG EAPCET (Eng) & JEE Main",
-        "Medical & Agri Stream: NEET-UG & AP/TG EAPCET (Agri/Pharma)",
-        "Science & Research: IISER Aptitude Test (IAT), NEST, CUET-UG"
-      ],
-      "undergradDegrees": [
-        "B.Tech / BS in Bioinformatics & Computational Biology",
-        "B.Tech in Biomedical Engineering",
-        "BS-MS Dual Degree at IISER / IISc Bangalore",
-        "Biotechnology & Genetic Engineering"
-      ],
-      "freeResources": [
-        "Rosalind.info (Bioinformatics problem sets)",
-        "Khan Academy Calculus & Biology tracks"
+      "exams": [
+        {
+          "id": "polycet",
+          "name": "State POLYCET",
+          "unit": "Rank",
+          "qualifying": "36/120 marks (30%) for General/BC.",
+          "tiers": [
+            { "label": "Top Government Polytechnic Colleges", "range": "Rank 1 – 2,000", "maxRank": 2000 },
+            { "label": "Aided Technical Institutes", "range": "Rank 2,001 – 8,000", "maxRank": 8000 },
+            { "label": "Private Polytechnic Institutions", "range": "Rank 8,001+", "maxRank": 999999 }
+          ]
+        },
+        {
+          "id": "ecet",
+          "name": "State ECET (Lateral Entry post-diploma)",
+          "unit": "Rank",
+          "qualifying": "50/200 marks (25%) for General/BC.",
+          "tiers": [
+            { "label": "Top University Colleges (2nd Year Direct Entry)", "range": "State Rank 1 – 150", "maxRank": 150 },
+            { "label": "Top Autonomous Colleges (2nd Year Direct Entry)", "range": "State Rank 151 – 1,000", "maxRank": 1000 },
+            { "label": "Reputed Affiliated Engineering Colleges", "range": "State Rank 1,001 – 5,000", "maxRank": 5000 }
+          ]
+        }
       ]
     },
     "MEC_COMMERCE_DATA": {
       "title": "MEC Stream (Mathematics, Economics, Commerce)",
       "stream": "Intermediate (11th & 12th) MEC",
-      "summary": "Combines analytical calculus and statistics with commerce and economic systems, ideal for FinTech, quantitative finance, and CA/CMA careers.",
+      "summary": "Combines analytical math and statistics with corporate accounting and economics.",
       "highSchoolFocus": [
-        "Commercial Mathematics, Algebra, Linear Programming & Statistics",
-        "Accountancy: Double-entry bookkeeping, final accounts, ledgers & depreciation",
-        "Economics: Microeconomics, Macroeconomics & Indian Economic Development"
+        "Commercial Mathematics, Linear Programming & Statistics",
+        "Accountancy: Double-entry bookkeeping, final accounts & ledgers",
+        "Economics: Microeconomics, Macroeconomics & Economic Systems"
       ],
-      "entranceExams": [
-        "Professional Certifications: CA Foundation (ICAI), CMA Foundation (ICMAI)",
-        "Management: IPMAT (IIM Indore/Rohtak 5-Year Integrated BBA+MBA), JIPMAT",
-        "University Entrances: CUET-UG (DU, Central Universities), AP/TS LAWCET",
-        "State Degree Admissions: OAMDC (AP) / DOST (TS) for degree colleges"
-      ],
-      "undergradDegrees": [
-        "B.Com (Analytics / Computer Applications / Honours)",
-        "BBA (Finance, FinTech, Business Analytics)",
-        "B.Sc Statistics / Data Economics",
-        "Integrated BBA-LLB (5-Year Corporate Law)"
-      ],
-      "freeResources": [
-        "Zerodha Varsity (Capital Markets & Financial Analysis)",
-        "ICAI Foundation Open Study Modules",
-        "Khan Academy Micro & Macroeconomics"
+      "exams": [
+        {
+          "id": "ca_foundation",
+          "name": "CA Foundation",
+          "unit": "Marks (out of 400)",
+          "qualifying": "Minimum 40% in each subject & 50% aggregate (200/400).",
+          "tiers": [
+            { "label": "Distinction Performance", "range": "280 – 400 Marks", "minScore": 280 },
+            { "label": "Comfortable Pass Bracket", "range": "230 – 279 Marks", "minScore": 230 },
+            { "label": "Qualifying Standard", "range": "200 – 229 Marks", "minScore": 200 }
+          ]
+        },
+        {
+          "id": "ipmat",
+          "name": "IPMAT (5-Year Integrated Management)",
+          "unit": "Percentile",
+          "qualifying": "Cut-off varies by pool; Composite score ~65+.",
+          "tiers": [
+            { "label": "Top National Management Institutes", "range": "97.5+ Percentile", "minScore": 97.5 },
+            { "label": "Allied Central Business Institutes", "range": "90.0 – 97.4 Percentile", "minScore": 90.0 }
+          ]
+        }
       ]
     },
     "CEC_COMMERCE_MANAGEMENT": {
       "title": "CEC Stream (Commerce, Economics, Civics)",
       "stream": "Intermediate (11th & 12th) CEC",
-      "summary": "Focuses on corporate management, commercial law, civil governance, and banking without advanced calculus pressure.",
+      "summary": "Commercial administration, accounting, corporate governance, and civil systems.",
       "highSchoolFocus": [
-        "Accountancy, Auditing & Financial Accounting principles",
-        "Civics & Governance: Indian Constitution, Parliament, and Public Administration",
-        "Economics: Trade, Banking, Monetary Policy, and Commercial Growth"
+        "Accountancy: Financial Accounting, ledgers, and trial balances",
+        "Civics & Governance: Constitution of India, State machinery & public policies",
+        "Economics: Banking, currency, budget planning & national income"
       ],
-      "entranceExams": [
-        "Professional Law: AP LAWCET / TS LAWCET (5-Year Integrated Law)",
-        "National Law: CLAT-UG, AILET (National Law Universities)",
-        "Finance & Accounting: CA Foundation, CMA Foundation",
-        "Central Universities: CUET-UG (Commerce & Business streams)"
-      ],
-      "undergradDegrees": [
-        "B.Com (General, Taxation, Computers)",
-        "BBA / BMS (Bachelor of Management Studies)",
-        "5-Year Integrated B.A. LL.B / BBA LL.B",
-        "Banking, Financial Services & Insurance (BFSI) programs"
-      ],
-      "freeResources": [
-        "Investopedia Corporate Finance & Accounting Guides",
-        "NCERT Political Science and Constitution Textbooks"
+      "exams": [
+        {
+          "id": "lawcet",
+          "name": "State LAWCET (5-Year Integrated Law)",
+          "unit": "Rank",
+          "qualifying": "35% (42/120 marks) for General/BC.",
+          "tiers": [
+            { "label": "Top University Law Colleges", "range": "Rank 1 – 600", "maxRank": 600 },
+            { "label": "Reputed Private Law Colleges", "range": "Rank 601 – 2,500", "maxRank": 2500 },
+            { "label": "Regional Affiliated Law Centers", "range": "Rank 2,501+", "maxRank": 999999 }
+          ]
+        },
+        {
+          "id": "clat",
+          "name": "CLAT-UG (National Law Universities)",
+          "unit": "All India Rank",
+          "qualifying": "Scoring ~75-85+ out of 120 marks.",
+          "tiers": [
+            { "label": "Top Tier National Law Universities", "range": "AIR 1 – 400", "maxRank": 400 },
+            { "label": "Established National Law Universities", "range": "AIR 401 – 1,500", "maxRank": 1500 },
+            { "label": "Newer National Law Universities", "range": "AIR 1,501 – 3,500", "maxRank": 3500 }
+          ]
+        }
       ]
     },
     "HEC_HUMANITIES_ARTS": {
-      "title": "HEC & Creative Arts Stream (History, Economics, Civics / Design & Behavioral Track)",
-      "stream": "Intermediate (11th & 12th) HEC / Arts",
-      "summary": "The premier launchpad for Design, Behavioral Sciences (Psychology), Constitutional Law, Civil Services, and Digital Media. Note: While CoA mandates PCM for structural B.Arch, all B.Des Spatial/Interior/Product Design degrees are 100% open to Arts graduates.",
+      "title": "HEC Stream (History, Economics, Civics)",
+      "stream": "Intermediate (11th & 12th) HEC / Humanities",
+      "summary": "Constitutional governance, administrative services, humanities, and social sciences.",
       "highSchoolFocus": [
         "History: Ancient, Medieval, Modern Indian & World Civilizations",
-        "Civics: Constitution of India, Political Theory & Human Rights",
-        "Economics: Micro/Macroeconomics & Indian Economic Planning",
-        "Creative Portfolio Development: Sketching, Spatial Perspective & Lateral Thinking"
+        "Civics: Political Theory, Indian Constitution & Public Administration",
+        "Economics: Socio-economic planning, rural economics & public finance"
       ],
-      "entranceExams": [
-        "Top Design Entrances: UCEED (IITs - Open to Arts), NID-DAT (B.Des), NIFT (Fashion/Textile/Accessory)",
-        "Fine Arts & Animation: JNAFAU FADEE (TS/AP), BFA Entrance Tests",
-        "Law Entrances: AP LAWCET / TS LAWCET (5-Year B.A. LL.B), CLAT-UG, AILET",
-        "Central Universities (Psychology / Media): CUET-UG (DU, HCU, TISS, BHU for BA/B.Sc Psychology)",
-        "State Degree Portals: AP OAMDC / TS DOST (Direct degree counseling for BA Psychology/Journalism)"
-      ],
-      "undergradDegrees": [
-        "B.Des in UI/UX Design, Interior & Spatial Experience Design, or Product Design",
-        "B.A. / B.Sc in Psychology (Clinical, Cognitive, Counseling Psychology)",
-        "5-Year Integrated B.A. LL.B (Corporate, Criminal, or Cyber Law)",
-        "B.Des / B.Sc in Animation, VFX & Game Art",
-        "B.A. in Journalism, Film & Digital Mass Communication"
-      ],
-      "freeResources": [
-        "UCEED & NID Previous Year Question Papers (Design Aptitude)",
-        "Khan Academy Psychology & World History modules",
-        "PRS Legislative Research (Indian Constitution & Policy)"
+      "exams": [
+        {
+          "id": "lawcet",
+          "name": "State LAWCET (5-Year Integrated Law)",
+          "unit": "Rank",
+          "qualifying": "42/120 marks (35%) for General/BC.",
+          "tiers": [
+            { "label": "Top University Law Colleges", "range": "Rank 1 – 600", "maxRank": 600 },
+            { "label": "Reputed Private Law Colleges", "range": "Rank 601 – 2,500", "maxRank": 2500 },
+            { "label": "Affiliated Regional Law Centers", "range": "Rank 2,501+", "maxRank": 999999 }
+          ]
+        },
+        {
+          "id": "cuet_humanities",
+          "name": "CUET-UG (Central Universities)",
+          "unit": "Percentile",
+          "qualifying": "Course and institution normalized score cutoff.",
+          "tiers": [
+            { "label": "Top Central Universities", "range": "96+ Percentile", "minScore": 96.0 },
+            { "label": "Established State & Central Universities", "range": "88.0 – 95.9 Percentile", "minScore": 88.0 }
+          ]
+        }
       ]
     },
     "ARTS_DESIGN_CREATIVE": {
       "title": "Arts, Design & Creative Technologies Track",
-      "stream": "Higher Secondary / 11th & 12th Arts, Humanities, or any Stream with Design Portfolio",
-      "summary": "Dedicated creative pathway focusing on industrial design, UI/UX interaction systems, spatial planning, fashion, and digital visual entertainment. While Council of Architecture (CoA) mandates Math & Physics for structural B.Arch, all B.Des Spatial, Interior, and Product Design programs are 100% open to Arts graduates.",
+      "stream": "11th & 12th Arts / Any Stream with Creative Portfolio",
+      "summary": "User interaction, visual arts, spatial design, and digital entertainment.",
       "highSchoolFocus": [
-        "Visual Arts, Freehand Sketching & Perspective Drawing",
-        "Design Thinking, Ergonomics & Human-Centered Problem Solving",
-        "Portfolio development (digital assets, physical models, case studies)",
-        "Aptitude preparation: General observation, lateral thinking & spatial reasoning"
+        "Visual Arts, freehand sketching & perspective geometry",
+        "Design Thinking, observation & creative problem solving",
+        "Creative portfolio development"
       ],
-      "entranceExams": [
-        "National Design Entrances: UCEED (IITs — open to all streams), NID-DAT (National Institute of Design Prelims & Mains)",
-        "Fashion & Lifestyle: NIFT Entrance Exam (GAT + CAT + Situation Test), FDDI AIST",
-        "Fine Arts & Spatial: JNAFAU FADEE (Telangana & AP Fine Arts Entrance), Andhra University BFA Entrance",
-        "Private Design Schools: SEAT (Srishti Manipal), CEPT Design Aptitude Test"
-      ],
-      "undergradDegrees": [
-        "B.Des in UI/UX Design, Interaction Design & Digital Product Design",
-        "B.Des in Interior & Spatial Experience Design",
-        "B.Des in Fashion Design, Textile Design & Lifestyle Accessories",
-        "B.F.A. / B.Sc in Animation, VFX, Game Art & Concept Illustration"
-      ],
-      "freeResources": [
-        "UCEED / NID Official Past Year Question Papers",
-        "Interaction Design Foundation Open Guides",
-        "Blender 3D Open Source Documentation & Tutorials"
-      ]
-    },
-    "POLYTECHNIC_DIPLOMA": {
-      "title": "Polytechnic Diploma in Engineering",
-      "stream": "3-Year Technical Diploma (Post-10th)",
-      "summary": "A practical, laboratory-first technical pathway providing direct lateral admission into the 2nd year of B.Tech.",
-      "highSchoolFocus": [
-        "Workshop technology, engineering drawing, and circuit labs",
-        "Applied Physics, Chemistry, and Engineering Mathematics",
-        "Specialized core branch electives (CME, ECE, Mechanical, Civil)"
-      ],
-      "entranceExams": [
-        "Initial Entry Exam: POLYCET (AP POLYCET / TG POLYCET post 10th)",
-        "Lateral Entry Exam: ECET (AP ECET / TG ECET for direct 2nd-year B.Tech entry)"
-      ],
-      "undergradDegrees": [
-        "Lateral Entry B.Tech (2nd Year Direct in State Engineering Colleges)",
-        "Associate Engineer Industry Roles (PSUs, Railways, State Transco/Genco)",
-        "Advanced Specialization Diplomas"
-      ],
-      "freeResources": [
-        "State Board of Technical Education & Training (SBTET) Notes",
-        "NPTEL Diploma Support Courses"
-      ]
-    },
-    "VOCATIONAL_SELF_PACED": {
-      "title": "Vocational & Applied Technical Track",
-      "stream": "Vocational Intermediate / National Skills Qualification Framework",
-      "summary": "Applied, hands-on certification track focusing on direct technician roles, paramedical labs, or specialized software support.",
-      "highSchoolFocus": [
-        "Domain practicals (Computer Science, Medical Lab Tech, Automobile)",
-        "Basic Accounting, Office Administration, or System Servicing",
-        "On-the-job training (OJT) and apprenticeship hours"
-      ],
-      "entranceExams": [
-        "State Vocational Bridge Courses for EAPCET / Degree lateral options",
-        "Apprenticeship Eligibility Tests (NAPS / NSDC)"
-      ],
-      "undergradDegrees": [
-        "B.Voc (Bachelor of Vocation in Software Development / MLT)",
-        "Regular degree entry via bridge examination",
-        "Direct Junior Field Technician & Lab Roles"
-      ],
-      "freeResources": [
-        "SWAYAM Vocational Portal",
-        "National Skill Development Corporation (NSDC) Modules"
+      "exams": [
+        {
+          "id": "uceed",
+          "name": "UCEED (National Level)",
+          "unit": "All India Rank",
+          "qualifying": "Part-A qualifying cutoff (~70-90 marks).",
+          "tiers": [
+            { "label": "Top Tier National Design Institutes", "range": "AIR 1 – 120", "maxRank": 120 },
+            { "label": "Institutes Sharing UCEED Result", "range": "AIR 121 – 1,000", "maxRank": 1000 }
+          ]
+        },
+        {
+          "id": "fine_arts_state",
+          "name": "State Fine Arts / Design Entrance",
+          "unit": "Rank",
+          "qualifying": "Qualifying score in drawing & aptitude papers.",
+          "tiers": [
+            { "label": "Top University Fine Arts Colleges", "range": "Rank 1 – 300", "maxRank": 300 },
+            { "label": "Affiliated Design & Animation Institutions", "range": "Rank 301 – 1,500", "maxRank": 1500 }
+          ]
+        }
       ]
     }
   }
