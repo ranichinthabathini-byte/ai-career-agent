@@ -110,10 +110,8 @@ async function init() {
 
 function updateProgress() {
   if (currentIndex < CARD_SEQUENCE.length) {
-    if (progressText) progressText.textContent = `Step ${currentIndex + 1} of ${CARD_SEQUENCE.length}`;
     if (progressBar) progressBar.style.width = `${((currentIndex + 1) / CARD_SEQUENCE.length) * 100}%`;
   } else {
-    if (progressText) progressText.textContent = "Your Recommendation";
     if (progressBar) progressBar.style.width = "100%";
   }
 }

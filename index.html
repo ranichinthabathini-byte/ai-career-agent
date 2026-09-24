@@ -37,3 +37,30 @@
   <script type="module" src="js/ui.js"></script>
 </body>
 </html> 
+<dialog id="roadmap-modal" class="roadmap-modal">
+  <div class="modal-header">
+    <h3 id="modal-node-title"></h3>
+    <button type="button" id="modal-close-btn" class="btn-close">✕</button>
+  </div>
+  <p id="modal-node-desc" class="modal-desc"></p>
+  <div id="modal-node-links" class="modal-links"></div>
+</dialog>
+<main id="card-container">
+      <!-- Cards render dynamically here -->
+    </main>
+  </div>
+
+  <!-- Roadmap Detail Modal -->
+  <dialog id="roadmap-modal" class="roadmap-modal">
+    <div class="modal-header">
+      <h3 id="modal-node-title">Node Title</h3>
+      <button type="button" id="modal-close-btn" class="btn-close">✕</button>
+    </div>
+    <p id="modal-node-desc" class="modal-desc"></p>
+    <div id="modal-node-links" class="modal-links"></div>
+  </dialog>
+
+  <!-- ui.js handles importing taxonomy, state, and routing internally -->
+  <script type="module" src="js/ui.js"></script>
+</body>
+</html>
