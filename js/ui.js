@@ -1,10 +1,10 @@
-import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js?v=5";
+import { BOARD, SUBJECT_INTERESTS, PATHWAY_KEYS } from "./taxonomy.js?v=7";
 
-const STEPS = [
+const CARDS = [
   {
     id: "board",
-    title: "Step 1: What is your current school board?",
-    hint: "Helps tailor the transition into Higher Secondary (11th & 12th) or Polytechnic Diploma.",
+    title: "What is your current school board?",
+    hint: "", // HINT REMOVED HERE
     options: [
       { label: "State Board (BIEAP / TSBIE / SSC)", value: BOARD.STATE },
       { label: "CBSE (Central Board)", value: BOARD.CBSE },
@@ -14,7 +14,7 @@ const STEPS = [
   },
   {
     id: "subject_interest",
-    title: "Step 2: Which subjects do you genuinely enjoy studying?",
+    title: "Which subjects do you genuinely enjoy studying?",
     hint: "Choose the combination that best matches your interest and core strengths.",
     options: [
       { label: "Mathematics & Physical Sciences (Logic, Calculations, Physics)", value: SUBJECT_INTERESTS.MATH_PHYSICS },
@@ -108,7 +108,7 @@ const STREAM_MAPPINGS = {
   ]
 };
 
-let currentStep = 0;
+let currentCardIndex = 0;
 let userChoices = {
   board: null,
   subject_interest: null,
@@ -127,7 +127,7 @@ async function init() {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const data = await res.json();
     careerContent = data.pathways;
-    renderStep(currentStep);
+    renderCard(currentCardIndex);
   } catch (err) {
     if (container) {
       container.innerHTML = `
@@ -142,21 +142,21 @@ async function init() {
 
 function updateProgress() {
   if (progressBar) {
-    progressBar.style.width = `${((currentStep + 1) / 4) * 100}%`;
+    progressBar.style.width = `${((currentCardIndex + 1) / 4) * 100}%`;
   }
 }
 
-function renderStep(index) {
+function renderCard(index) {
   if (!container) return;
   updateProgress();
 
-  // STEP 1 & STEP 2: Basic single-selection cards
+  // Part 1 & Part 2: Board and Subject Interests
   if (index < 2) {
-    const card = STEPS[index];
+    const card = CARDS[index];
     container.innerHTML = `
       <div class="intake-card">
         <h2>${card.title}</h2>
-        <p class="hint">${card.hint}</p>
+        ${card.hint ? `<p class="hint">${card.hint}</p>` : ""}
 
         <div class="option-group" id="option-list">
           ${card.options.map(opt => {
@@ -181,29 +181,29 @@ function renderStep(index) {
     container.querySelectorAll(".btn-option").forEach(btn => {
       btn.addEventListener("click", () => {
         userChoices[card.id] = btn.getAttribute("data-value");
-        renderStep(currentStep);
+        renderCard(currentCardIndex);
       });
     });
 
     document.getElementById("btn-next")?.addEventListener("click", () => {
-      currentStep++;
-      renderStep(currentStep);
+      currentCardIndex++;
+      renderCard(currentCardIndex);
     });
 
     document.getElementById("btn-back")?.addEventListener("click", () => {
-      currentStep--;
-      renderStep(currentStep);
+      currentCardIndex--;
+      renderCard(currentCardIndex);
     });
     return;
   }
 
-  // STEP 3: Stream Selection based on Step 2
+  // Part 3: Stream Selection based on Subjects
   if (index === 2) {
     const dynamicOptions = STREAM_MAPPINGS[userChoices.subject_interest] || [];
 
     container.innerHTML = `
       <div class="intake-card">
-        <h2>Step 3: Select Your Stream / Program</h2>
+        <h2>Select Your Stream / Program</h2>
         <p class="hint">Recommended stream options based on your subject preferences:</p>
 
         <div class="option-group" id="option-list">
@@ -233,25 +233,25 @@ function renderStep(index) {
     container.querySelectorAll(".btn-option").forEach(btn => {
       btn.addEventListener("click", () => {
         userChoices.chosen_pathway = btn.getAttribute("data-pathway");
-        userChoices.selected_exam_id = null; // reset if pathway changed
+        userChoices.selected_exam_id = null;
         userChoices.user_score = null;
-        renderStep(2);
+        renderCard(2);
       });
     });
 
     document.getElementById("btn-to-exam")?.addEventListener("click", () => {
-      currentStep = 3;
-      renderStep(3);
+      currentCardIndex = 3;
+      renderCard(3);
     });
 
     document.getElementById("btn-back")?.addEventListener("click", () => {
-      currentStep--;
-      renderStep(currentStep);
+      currentCardIndex--;
+      renderCard(currentCardIndex);
     });
     return;
   }
 
-  // STEP 4: Choose Exam Type and Enter Rank / Score
+  // Part 4: Exam Type and Score/Rank Input
   if (index === 3) {
     const pathwayData = careerContent[userChoices.chosen_pathway];
     const availableExams = pathwayData?.exams || [];
@@ -259,7 +259,7 @@ function renderStep(index) {
 
     container.innerHTML = `
       <div class="intake-card">
-        <h2>Step 4: Select Exam Type & Score</h2>
+        <h2>Select Exam Type & Rank / Score</h2>
         <p class="hint">Select your target entrance examination and provide your actual or expected score/rank:</p>
 
         <label style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.6rem;">
@@ -307,7 +307,7 @@ function renderStep(index) {
     container.querySelectorAll(".btn-option[data-exam-id]").forEach(btn => {
       btn.addEventListener("click", () => {
         userChoices.selected_exam_id = btn.getAttribute("data-exam-id");
-        renderStep(3);
+        renderCard(3);
       });
     });
 
@@ -321,8 +321,8 @@ function renderStep(index) {
     });
 
     document.getElementById("btn-back")?.addEventListener("click", () => {
-      currentStep = 2;
-      renderStep(2);
+      currentCardIndex = 2;
+      renderCard(2);
     });
   }
 }
@@ -330,20 +330,18 @@ function renderStep(index) {
 function evaluateScoreBracket(exam, score) {
   if (score === null || isNaN(score) || !exam?.tiers) return null;
 
-  // Rank-based (lower is better)
   if (exam.unit.toLowerCase().includes("rank")) {
     for (const tier of exam.tiers) {
       if (score <= tier.maxRank) {
-        return { tier: tier.label, range: tier.range, isMatch: true };
+        return { tier: tier.label, range: tier.range };
       }
     }
   }
 
-  // Score/Percentile-based (higher is better)
   if (exam.unit.toLowerCase().includes("percentile") || exam.unit.toLowerCase().includes("marks")) {
     for (const tier of exam.tiers) {
       if (score >= tier.minScore) {
-        return { tier: tier.label, range: tier.range, isMatch: true };
+        return { tier: tier.label, range: tier.range };
       }
     }
   }
@@ -368,7 +366,6 @@ function showFinalResults() {
       <h2>${path.title}</h2>
       <p class="hint">${path.summary}</p>
 
-      <!-- 1. What Students Study in College -->
       <section class="result-section">
         <strong>📚 Academic Subjects Taught:</strong>
         <ul>
@@ -376,7 +373,6 @@ function showFinalResults() {
         </ul>
       </section>
 
-      <!-- 2. Candidate Evaluation & Cutoff Ranges -->
       ${selectedExam ? `
         <section class="result-section" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
@@ -396,7 +392,7 @@ function showFinalResults() {
             </div>
           ` : `
             <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.84rem; color: #1e40af;">
-              ℹ️ Enter your rank/score in Step 4 to highlight your specific placement bracket.
+              ℹ️ Enter your rank/score in the previous screen to highlight your specific placement bracket.
             </div>
           `}
 
@@ -426,8 +422,8 @@ function showFinalResults() {
       selected_exam_id: null,
       user_score: null
     };
-    currentStep = 0;
-    renderStep(0);
+    currentCardIndex = 0;
+    renderCard(0);
   });
 
   document.getElementById("save-pdf-btn")?.addEventListener("click", () => {
